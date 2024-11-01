@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @read_status %>
+
+<div>
+  <%= link_to "Edit this read status", edit_read_status_path(@read_status) %> |
+  <%= link_to "Back to read statuses", read_statuses_path %>
+
+  <%= button_to "Destroy this read status", @read_status, method: :delete %>
+</div>

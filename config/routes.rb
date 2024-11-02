@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-
+  root 'application#home'
   resources :book_copies
   resources :availability_calendars
   resources :notifications, only: %i[create update]
@@ -16,9 +16,11 @@ Rails.application.routes.draw do
   resources :genres
   resources :authors
   resources :books
+  resources :series
+  resources :reading_lists
   get 'signup', to: 'members#new', as: 'signup'
   get 'login', to: 'sessions#new', as: 'login'
   post 'login', to: 'sessions#create'
   get 'logout', to: 'sessions#destroy', as: 'logout'
-  root 'application#home'
+
 end

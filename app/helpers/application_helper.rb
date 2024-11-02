@@ -2,16 +2,20 @@ module ApplicationHelper
   def bootstrap_class_for(flash_type)
     case flash_type.to_sym
     when :notice
-      "primary"
+      'primary'
     when :alert
-      "danger"
+      'danger'
     when :success
-      "success"
+      'success'
     when :error
-      "danger"
+      'danger'
     else
-      "secondary"
+      'secondary'
     end
+  end
+
+  def format_date(date)
+    date.strftime('%B %d, %Y')
   end
 end
 

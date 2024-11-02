@@ -3,7 +3,7 @@
   <% flash.each do |type, message| %>
     <% toast_class = case type.to_sym
                      when :notice then "bg-success text-white" # Green for success
-                     when :alert then "bg-danger text-white" # Red for errors
+                     when :error then "bg-danger text-white" # Red for errors
                      when :warning then "bg-warning text-dark" # Yellow for warnings
                      else "bg-secondary text-white" # Default to gray
                      end %>

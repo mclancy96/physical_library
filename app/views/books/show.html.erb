@@ -1,10 +1,15 @@
-<p style="color: green"><%= notice %></p>
+<h1><%= @book.title %></h1>
+<p><strong>Author:</strong> <%= link_to @book.author.name, author_path(@book.author) %></p>
+<p><strong>Genre:</strong> <%= @book.genre.name %></p>
+<p><strong>Description:</strong> <%= @book.description %></p>
 
-<%= render @book %>
-
-<div>
-  <%= link_to "Edit this book", edit_book_path(@book) %> |
-  <%= link_to "Back to books", books_path %>
-
-  <%= button_to "Destroy this book", @book, method: :delete %>
-</div>
+<% if logged_in? %>
+  <%= form_with model: @book.ratings.build, local: true do |f| %>
+    <%= f.hidden_field :user_id, value: current_user.id %>
+    <div class="form-group">
+      <%= f.label :value, "Your Rating" %>
+      <%= f.number_field :value, in: 1..5, step: 1, class: 'form-control' %>
+    </div>
+    <%= f.submit 'Submit Rating', class: 'btn btn-primary mt-2' %>
+  <% end %>
+<% end %>

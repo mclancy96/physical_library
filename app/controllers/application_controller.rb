@@ -2,13 +2,27 @@
 
 class ApplicationController < ActionController::Base
   include ApplicationHelper
-  # before_action :authenticate
+  before_action :authenticate
   around_action :catch_not_found
 
   def home
     flash[:notice] = 'Welcome home'
+    @featured_books = Book.where(featured: true).limit(4)
+    @genres = Genre.all.limit(8)  # Adjust number as needed
+    @series = Series.joins(:books).distinct.limit(4)
+    @reading_lists = current_user.reading_lists if user_signed_in?
+    @wishlist_books = current_user.wishlist.books if user_signed_in?
+    @user_ratings = current_user.ratings.includes(:book) if user_signed_in?
+    @recent_activities = UserActivity.order(created_at: :desc).limit(10)
     render 'home'
+  end
 
+  def search
+    @query = params[:query]
+    @results = Book.where("title LIKE ?", "%#{@query}%")
+                   .or(Book.where("description LIKE ?", "%#{@query}%"))
+                   .or(Author.where("name LIKE ?", "%#{@query}%"))
+                   .or(Genre.where("name LIKE ?", "%#{@query}%"))
   end
 
   helper_method def current_user

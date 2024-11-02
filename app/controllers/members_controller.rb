@@ -1,4 +1,6 @@
+# frozen_string_literal: true
 class MembersController < ApplicationController
+  skip_before_action :authenticate, only: %i[new create]
   before_action :set_member, only: %i[show edit update destroy]
 
   # GET /members or /members.json

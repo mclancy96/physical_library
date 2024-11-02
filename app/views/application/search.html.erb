@@ -1,0 +1,12 @@
+<h1>Search Results for "<%= @query %>"</h1>
+<% if @results.present? %>
+  <ul class="list-group">
+    <% @results.each do |result| %>
+      <li class="list-group-item">
+        <%= link_to result.name || result.title, polymorphic_path(result) %>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>No results found.</p>
+<% end %>

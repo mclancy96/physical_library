@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_11_01_180819) do
+ActiveRecord::Schema[7.1].define(version: 2024_11_02_190406) do
   create_table "authors", force: :cascade do |t|
     t.string "name"
     t.text "biography"
@@ -57,6 +57,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_01_180819) do
     t.index ["genre_id"], name: "index_books_on_genre_id"
   end
 
+  create_table "books_wishlists", id: false, force: :cascade do |t|
+    t.integer "wishlist_id", null: false
+    t.integer "book_id", null: false
+    t.index %w[wishlist_id book_id], name: "index_books_wishlists_on_wishlist_id_and_book_id", unique: true
+  end
+
   create_table "borrowings", force: :cascade do |t|
     t.integer "book_id_id"
     t.integer "member_id_id"
@@ -83,6 +89,18 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_01_180819) do
     t.datetime "updated_at", null: false
     t.index ["book_id_id"], name: "index_likes_on_book_id_id"
     t.index ["member_id_id"], name: "index_likes_on_member_id_id"
+  end
+
+  create_table "member_activities", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "member_id", null: false
+    t.string "activity_type", null: false
+    t.integer "book_id"
+    t.date "activity_date", null: false
+    t.text "details"
+    t.index ["book_id"], name: "index_member_activities_on_book_id"
+    t.index ["member_id"], name: "index_member_activities_on_member_id"
   end
 
   create_table "members", force: :cascade do |t|
@@ -125,6 +143,11 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_01_180819) do
     t.index ["member_id_id"], name: "index_read_statuses_on_member_id_id"
   end
 
+  create_table "reading_lists", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "reservations", force: :cascade do |t|
     t.integer "book_id", null: false
     t.integer "member_id", null: false
@@ -148,6 +171,11 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_01_180819) do
     t.index ["member_id"], name: "index_reviews_on_member_id"
   end
 
+  create_table "series", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "wishlists", force: :cascade do |t|
     t.integer "member_id", null: false
     t.integer "book_id"
@@ -167,6 +195,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_01_180819) do
   add_foreign_key "borrowings", "member_ids"
   add_foreign_key "likes", "book_ids"
   add_foreign_key "likes", "member_ids"
+  add_foreign_key "member_activities", "books"
+  add_foreign_key "member_activities", "members"
   add_foreign_key "notifications", "members"
   add_foreign_key "ratings", "book_ids"
   add_foreign_key "ratings", "member_ids"

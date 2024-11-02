@@ -1,0 +1,20 @@
+<div aria-live="polite" aria-atomic="true" class="top-0 end-0" style="z-index: 1100;">
+  <!-- Then put toasts within -->
+  <% flash.each do |type, message| %>
+    <% toast_class = case type.to_sym
+                     when :notice then "bg-success text-white" # Green for success
+                     when :alert then "bg-danger text-white" # Red for errors
+                     when :warning then "bg-warning text-dark" # Yellow for warnings
+                     else "bg-secondary text-white" # Default to gray
+                     end %>
+
+    <div class="toast align-items-center text-<%= toast_class %> border-0" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body">
+          <%= message %>
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>
+  <% end %>
+</div>

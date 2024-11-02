@@ -1,0 +1,42 @@
+<%= form_with(model: book_copy) do |form| %>
+  <% if book_copy.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(book_copy.errors.count, "error") %> prohibited this book_copy from being saved:</h2>
+
+      <ul>
+        <% book_copy.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :book_id, style: "display: block" %>
+    <%= form.number_field :book_id %>
+  </div>
+
+  <div>
+    <%= form.label :barcode, style: "display: block" %>
+    <%= form.text_field :barcode %>
+  </div>
+
+  <div>
+    <%= form.label :condition, style: "display: block" %>
+    <%= form.text_field :condition %>
+  </div>
+
+  <div>
+    <%= form.label :acquisition_date, style: "display: block" %>
+    <%= form.date_field :acquisition_date %>
+  </div>
+
+  <div>
+    <%= form.label :shelf_location, style: "display: block" %>
+    <%= form.text_field :shelf_location %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

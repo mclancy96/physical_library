@@ -1,0 +1,72 @@
+<%= form_with(model: book) do |form| %>
+  <% if book.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(book.errors.count, "error") %> prohibited this book from being saved:</h2>
+
+      <ul>
+        <% book.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :title, style: "display: block" %>
+    <%= form.text_field :title %>
+  </div>
+
+  <div>
+    <%= form.label :author_id, style: "display: block" %>
+    <%= form.number_field :author_id %>
+  </div>
+
+  <div>
+    <%= form.label :genre_id, style: "display: block" %>
+    <%= form.number_field :genre_id %>
+  </div>
+
+  <div>
+    <%= form.label :publication_date, style: "display: block" %>
+    <%= form.date_field :publication_date %>
+  </div>
+
+  <div>
+    <%= form.label :isbn10, style: "display: block" %>
+    <%= form.text_field :isbn10 %>
+  </div>
+
+  <div>
+    <%= form.label :isbn13, style: "display: block" %>
+    <%= form.text_field :isbn13 %>
+  </div>
+
+  <div>
+    <%= form.label :copies_available, style: "display: block" %>
+    <%= form.number_field :copies_available %>
+  </div>
+
+  <div>
+    <%= form.label :book_type, style: "display: block" %>
+    <%= form.text_field :book_type %>
+  </div>
+
+  <div>
+    <%= form.label :digital_url, style: "display: block" %>
+    <%= form.text_field :digital_url %>
+  </div>
+
+  <div>
+    <%= form.label :shelf_location, style: "display: block" %>
+    <%= form.text_field :shelf_location %>
+  </div>
+
+  <div>
+    <%= form.label :status, style: "display: block" %>
+    <%= form.text_field :status %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

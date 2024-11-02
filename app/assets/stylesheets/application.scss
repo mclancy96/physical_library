@@ -1,0 +1,25 @@
+@import "bootstrap";
+
+.toast {
+  visibility: hidden; /* Hidden by default */
+  max-width: 300px; /* Set a max width */
+  margin: auto; /* Center the toast */
+  background-color: #333; /* Dark background color */
+  color: #fff; /* White text color */
+  text-align: center; /* Centered text */
+  border-radius: 5px; /* Rounded corners */
+  padding: 16px; /* Some padding */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 50%; /* Center the toast */
+  bottom: 30px; /* Place it at the bottom */
+  transform: translateX(-50%); /* Adjust to center */
+  opacity: 0; /* Transparent by default */
+  transition: opacity 0.5s ease-in-out; /* Fade effect */
+}
+
+/* Show the toast when activated */
+.toast.show {
+  visibility: visible; /* Show the toast */
+  opacity: 1; /* Make it visible */
+}

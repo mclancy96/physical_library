@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @book_copy %>
+
+<div>
+  <%= link_to "Edit this book copy", edit_book_copy_path(@book_copy) %> |
+  <%= link_to "Back to book copies", book_copies_path %>
+
+  <%= button_to "Destroy this book copy", @book_copy, method: :delete %>
+</div>

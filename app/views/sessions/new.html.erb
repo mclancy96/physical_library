@@ -1,0 +1,37 @@
+<div class="d-flex align-items-center justify-content-center" style="height: 100vh;">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="card shadow-sm">
+          <div class="card-header text-center bg-primary text-white">
+            <h4>Library Member Login</h4>
+          </div>
+
+          <div class="card-body">
+            <%= form_with url: login_path, local: true do |form| %>
+              <div class="mb-3">
+                <%= form.label :email, 'Email Address', class: 'form-label' %>
+                <%= form.email_field :email, class: 'form-control', placeholder: 'Enter your email', required: true %>
+              </div>
+
+              <div class="mb-3">
+                <%= form.label :password, 'Password', class: 'form-label' %>
+                <%= form.password_field :password, class: 'form-control', placeholder: 'Enter your password', required: true %>
+              </div>
+
+              <div class="d-grid">
+                <%= form.submit 'Login', class: 'btn btn-primary' %>
+              </div>
+            <% end %>
+          </div>
+
+          <div class="card-footer text-center">
+            <p class="mb-0">
+              Don't have an account? <%= link_to 'Sign up here', signup_path %>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

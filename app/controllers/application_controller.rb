@@ -4,7 +4,7 @@ class ApplicationController < ActionController::Base
   around_action :catch_not_found
 
   def home
-    render 'home'
+    render 'home' unless authenticate
   end
 
   helper_method def current_user
@@ -20,6 +20,10 @@ class ApplicationController < ActionController::Base
 
     flash[:error] = 'You must be logged in to access this section'
     redirect_to login_path
+  end
+
+  def authenticate
+    redirect_to login_path unless logged_in?
   end
 
   private

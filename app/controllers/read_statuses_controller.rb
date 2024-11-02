@@ -1,4 +1,5 @@
 class ReadStatusesController < ApplicationController
+  before_action :authenticate
   before_action :set_read_status, only: %i[ show edit update destroy ]
 
   # GET /read_statuses or /read_statuses.json

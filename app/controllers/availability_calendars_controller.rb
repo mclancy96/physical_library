@@ -1,4 +1,5 @@
 class AvailabilityCalendarsController < ApplicationController
+  before_action :authenticate
   before_action :set_availability_calendar, only: %i[ show edit update destroy ]
 
   # GET /availability_calendars or /availability_calendars.json

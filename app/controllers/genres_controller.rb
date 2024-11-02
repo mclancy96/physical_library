@@ -1,4 +1,5 @@
 class GenresController < ApplicationController
+  before_action :authenticate
   before_action :set_genre, only: %i[ show edit update destroy ]
 
   # GET /genres or /genres.json

@@ -1,4 +1,5 @@
 class BookCopiesController < ApplicationController
+  before_action :authenticate
   before_action :set_book_copy, only: %i[ show edit update destroy ]
 
   # GET /book_copies or /book_copies.json

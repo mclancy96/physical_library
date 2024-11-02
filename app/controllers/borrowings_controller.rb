@@ -1,4 +1,5 @@
 class BorrowingsController < ApplicationController
+  before_action :authenticate
   before_action :set_borrowing, only: %i[ show edit update destroy ]
 
   # GET /borrowings or /borrowings.json

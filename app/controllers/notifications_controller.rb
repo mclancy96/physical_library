@@ -1,4 +1,5 @@
 class NotificationsController < ApplicationController
+  before_action :authenticate
   before_action :set_notification, only: %i[ show edit update destroy ]
 
   # GET /notifications or /notifications.json

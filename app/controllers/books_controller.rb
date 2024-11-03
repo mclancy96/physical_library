@@ -23,14 +23,14 @@ class BooksController < ApplicationController
     book_data = OpenLibraryService.fetch_book_details(isbn)
 
     if book_data
-      # Create or find the author and genre
-      author = Author.find_or_create_by(name: book_data[:author])
-      genre = Genre.find_or_create_by(name: book_data[:genre])
+      # Create or find the authors
+      authors = book_data[:authors].map do |author_data|
+        Author.find_or_create_by(name: author_data[:name])
+      end
 
       # Create the book record
       book = Book.new(
         title: book_data[:title],
-        author:,
         publication_date: book_data[:publication_date],
         isbn10: book_data[:isbn10],
         isbn13: book_data[:isbn13]
@@ -47,6 +47,7 @@ class BooksController < ApplicationController
           Genre.find_or_create_by(name: genre_name)
         end
         book.genres << genres
+        book.authors << authors
         render json: { success: true, book: book.as_json.merge(cover_image_url: book.cover_image_url) }
       else
         render json: { success: false, error: book.errors.full_messages.join(", ") }

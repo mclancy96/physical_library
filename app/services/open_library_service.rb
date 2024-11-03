@@ -23,7 +23,7 @@ class OpenLibraryService
         author: book_info.dig('data', 'authors')&.first&.dig('name'), # Get the first author's name
         genres: book_info.dig('details', 'subjects'),
         publication_date: book_info.dig('data', 'publish_date'),
-        isbn10: book_info.dig('data', 'identifiers', 'isbn_10')&.first, # Assuming isbn_13 is the primary identifier
+        isbn10: book_info.dig('data', 'identifiers', 'isbn_10')&.first,
         isbn13: book_info.dig('data', 'identifiers', 'isbn_13')&.first,
         cover_image_url: book_info.dig('data', 'cover', 'large'), # Use the large cover image
         number_of_pages: book_info.dig('data', 'number_of_pages')

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_11_03_154042) do
+ActiveRecord::Schema[7.1].define(version: 2024_11_03_154833) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -49,6 +49,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_03_154042) do
     t.index ["book_id"], name: "index_authors_on_book_id"
   end
 
+  create_table "authors_books", id: false, force: :cascade do |t|
+    t.integer "author_id", null: false
+    t.integer "book_id", null: false
+    t.index ["author_id"], name: "index_authors_books_on_author_id"
+    t.index ["book_id"], name: "index_authors_books_on_book_id"
+  end
+
   create_table "availability_calendars", force: :cascade do |t|
     t.integer "book_id", null: false
     t.date "available_date"
@@ -67,6 +74,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_03_154042) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["book_id"], name: "index_book_copies_on_book_id"
+  end
+
+  create_table "book_genres", force: :cascade do |t|
+    t.integer "book_id", null: false
+    t.integer "genre_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["book_id"], name: "index_book_genres_on_book_id"
+    t.index ["genre_id"], name: "index_book_genres_on_genre_id"
   end
 
   create_table "book_series", force: :cascade do |t|
@@ -249,6 +265,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_03_154042) do
   add_foreign_key "authors", "books"
   add_foreign_key "availability_calendars", "books"
   add_foreign_key "book_copies", "books"
+  add_foreign_key "book_genres", "books"
+  add_foreign_key "book_genres", "genres"
   add_foreign_key "book_series", "books"
   add_foreign_key "book_series", "series"
   add_foreign_key "books", "authors"

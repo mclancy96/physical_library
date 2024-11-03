@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_11_03_041924) do
+ActiveRecord::Schema[7.1].define(version: 2024_11_03_134108) do
   create_table "authors", force: :cascade do |t|
     t.string "name"
     t.text "biography"
@@ -65,6 +65,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_03_041924) do
     t.string "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "page_count"
     t.index ["author_id"], name: "index_books_on_author_id"
     t.index ["genre_id"], name: "index_books_on_genre_id"
   end
@@ -144,10 +145,11 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_03_041924) do
   create_table "read_statuses", force: :cascade do |t|
     t.integer "member_id", null: false
     t.integer "book_id", null: false
-    t.string "status", null: false
+    t.integer "status", default: 0
     t.date "finished_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "page_count"
     t.index ["book_id"], name: "index_read_statuses_on_book_id"
     t.index ["member_id", "book_id"], name: "index_read_statuses_on_member_id_and_book_id", unique: true
     t.index ["member_id"], name: "index_read_statuses_on_member_id"

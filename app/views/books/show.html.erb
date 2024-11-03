@@ -1,7 +1,7 @@
 <h1><%= @book.title %></h1>
 <p><strong>Author:</strong> <%= link_to @book.author.name, author_path(@book.author) %></p>
 <p><strong>Genre:</strong> <%= @book.genre.name %></p>
-<p><strong>Description:</strong> <%= @book.description %></p>
+<!--<p><strong>Description:</strong> <%#= @book.description %></p>-->
 
 <% if logged_in? %>
   <%= form_with model: @book.ratings.build, local: true do |f| %>

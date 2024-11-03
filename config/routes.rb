@@ -12,7 +12,7 @@ Rails.application.routes.draw do
   resources :ratings
   resources :likes
   resources :borrowings
-  resources :members
+  resources :members, except: %i[new]
   resources :genres
   resources :authors
   resources :books
@@ -22,5 +22,5 @@ Rails.application.routes.draw do
   get 'login', to: 'sessions#new', as: 'login'
   post 'login', to: 'sessions#create'
   get 'logout', to: 'sessions#destroy', as: 'logout'
-
+  get 'books/isbn/:isbn', to: 'books#book_data_lookup'
 end

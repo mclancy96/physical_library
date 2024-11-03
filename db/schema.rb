@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_11_02_190406) do
+ActiveRecord::Schema[7.1].define(version: 2024_11_03_030750) do
   create_table "authors", force: :cascade do |t|
     t.string "name"
     t.text "biography"
@@ -39,6 +39,16 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_02_190406) do
     t.index ["book_id"], name: "index_book_copies_on_book_id"
   end
 
+  create_table "book_series", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "book_id", null: false
+    t.integer "series_id", null: false
+    t.index ["book_id", "series_id"], name: "index_book_series_on_book_id_and_series_id", unique: true
+    t.index ["book_id"], name: "index_book_series_on_book_id"
+    t.index ["series_id"], name: "index_book_series_on_series_id"
+  end
+
   create_table "books", force: :cascade do |t|
     t.string "title"
     t.integer "author_id"
@@ -55,12 +65,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_02_190406) do
     t.datetime "updated_at", null: false
     t.index ["author_id"], name: "index_books_on_author_id"
     t.index ["genre_id"], name: "index_books_on_genre_id"
-  end
-
-  create_table "books_wishlists", id: false, force: :cascade do |t|
-    t.integer "wishlist_id", null: false
-    t.integer "book_id", null: false
-    t.index %w[wishlist_id book_id], name: "index_books_wishlists_on_wishlist_id_and_book_id", unique: true
   end
 
   create_table "borrowings", force: :cascade do |t|
@@ -123,13 +127,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_02_190406) do
   end
 
   create_table "ratings", force: :cascade do |t|
-    t.integer "book_id_id"
-    t.integer "member_id_id"
+    t.integer "book_id", null: false
+    t.integer "member_id", null: false
     t.integer "rating"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["book_id_id"], name: "index_ratings_on_book_id_id"
-    t.index ["member_id_id"], name: "index_ratings_on_member_id_id"
+    t.index ["book_id"], name: "index_ratings_on_book_id"
+    t.index ["member_id"], name: "index_ratings_on_member_id"
   end
 
   create_table "read_statuses", force: :cascade do |t|
@@ -146,6 +150,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_02_190406) do
   create_table "reading_lists", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "member_id", null: false
+    t.integer "book_id", null: false
+    t.string "status"
+    t.date "added_date"
+    t.index ["book_id"], name: "index_reading_lists_on_book_id"
+    t.index ["member_id"], name: "index_reading_lists_on_member_id"
   end
 
   create_table "reservations", force: :cascade do |t|
@@ -176,6 +186,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_02_190406) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "wishlist_books", id: false, force: :cascade do |t|
+    t.integer "wishlist_id", null: false
+    t.integer "book_id", null: false
+    t.index ["wishlist_id", "book_id"], name: "index_wishlist_books_on_wishlist_id_and_book_id", unique: true
+  end
+
   create_table "wishlists", force: :cascade do |t|
     t.integer "member_id", null: false
     t.integer "book_id"
@@ -189,6 +205,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_02_190406) do
 
   add_foreign_key "availability_calendars", "books"
   add_foreign_key "book_copies", "books"
+  add_foreign_key "book_series", "books"
+  add_foreign_key "book_series", "series"
   add_foreign_key "books", "authors"
   add_foreign_key "books", "genres"
   add_foreign_key "borrowings", "book_ids"
@@ -198,10 +216,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_02_190406) do
   add_foreign_key "member_activities", "books"
   add_foreign_key "member_activities", "members"
   add_foreign_key "notifications", "members"
-  add_foreign_key "ratings", "book_ids"
-  add_foreign_key "ratings", "member_ids"
+  add_foreign_key "ratings", "books"
+  add_foreign_key "ratings", "members"
   add_foreign_key "read_statuses", "book_ids"
   add_foreign_key "read_statuses", "member_ids"
+  add_foreign_key "reading_lists", "books"
+  add_foreign_key "reading_lists", "members"
   add_foreign_key "reservations", "books"
   add_foreign_key "reservations", "members"
   add_foreign_key "reviews", "books"

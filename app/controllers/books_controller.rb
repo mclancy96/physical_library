@@ -1,6 +1,6 @@
 class BooksController < ApplicationController
   before_action :authenticate
-  before_action :set_book, only: %i[ show edit update destroy ]
+  before_action :set_book, only: %i[show edit update destroy]
 
   # GET /books or /books.json
   def index
@@ -55,6 +55,18 @@ class BooksController < ApplicationController
     respond_to do |format|
       format.html { redirect_to books_path, status: :see_other, notice: "Book was successfully destroyed." }
       format.json { head :no_content }
+    end
+  end
+
+  def book_data_lookup
+    @isbn = params[:isbn]
+    service = OpenLibraryService.new(@isbn)
+    @book_data = service.fetch_book_data
+
+    if @book_data["error"]
+      render json: { error: @book_data["error"] }, status: :not_found
+    else
+      render json: @book_data
     end
   end
 

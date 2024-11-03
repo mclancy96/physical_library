@@ -1,4 +1,4 @@
 class ReadingList < ApplicationRecord
   belongs_to :member
-  has_many :books
+  belongs_to :book
 end

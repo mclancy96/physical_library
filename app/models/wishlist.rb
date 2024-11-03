@@ -1,4 +1,5 @@
 class Wishlist < ApplicationRecord
   belongs_to :member
-  has_many :books, through: :books_wishlists, dependent: :destroy
+  has_many :wishlist_books
+  has_many :books, through: :wishlist_books
 end

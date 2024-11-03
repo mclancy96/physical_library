@@ -47,7 +47,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             };
 
-            const qrCodeErrorCallback = errorMessage => console.warn(`QR error: ${errorMessage}`);
+            const qrCodeErrorCallback = errorMessage => {
+                console.warn(`QR error: ${errorMessage}`);
+                return Promise.reject(error);
+            };
 
             html5QrCode.start(
                 { facingMode: "environment" },

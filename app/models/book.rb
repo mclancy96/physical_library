@@ -15,6 +15,9 @@ class Book < ApplicationRecord
   has_many :series, through: :book_series
   has_one_attached :cover_image
 
+  validates :isbn10, uniqueness: true, allow_blank: true
+  validates :isbn13, uniqueness: true, allow_blank: true
+
   def cover_image_url
     return unless cover_image.attached?
 

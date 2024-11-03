@@ -10,6 +10,6 @@ class Book < ApplicationRecord
   has_many :rated_by_members, through: :ratings, source: :member
   has_many :book_series
   has_many :series, through: :book_series
-  has_many :reading_lists
-  has_many :members, through: :reading_lists
+  has_one_attached :cover_image
+
 end

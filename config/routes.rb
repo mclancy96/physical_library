@@ -17,7 +17,6 @@ Rails.application.routes.draw do
   resources :authors
   resources :books
   resources :series
-  resources :reading_lists
   get 'signup', to: 'members#new', as: 'signup'
   get 'login', to: 'sessions#new', as: 'login'
   post 'login', to: 'sessions#create'

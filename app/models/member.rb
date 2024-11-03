@@ -1,11 +1,10 @@
 class Member < ApplicationRecord
-  has_many :reading_lists
-  has_many :books, through: :reading_lists
   has_many :wishlists
   has_many :ratings
   has_many :member_activities
   has_many :wishlists
-  has_many :likes
+  has_many :likes, dependent: :destroy
+  has_many :liked_books, through: :likes, source: :book
   has_many :ratings
   has_many :rated_books, through: :ratings, source: :book
   belongs_to :role, optional: true

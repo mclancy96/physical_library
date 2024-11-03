@@ -40,8 +40,12 @@
   </p>
 
   <p>
-    <strong>Digital url:</strong>
-    <%= book.digital_url %>
+    <strong>Cover Image:</strong><br>
+    <% if @book.cover_image.attached? %>
+      <%= image_tag @book.cover_image.variant(resize_to_limit: [300, 300]) %>
+    <% else %>
+      <em>No cover image available</em>
+    <% end %>
   </p>
 
   <p>

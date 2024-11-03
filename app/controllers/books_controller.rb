@@ -77,7 +77,7 @@ class BooksController < ApplicationController
     end
 
     # Only allow a list of trusted parameters through.
-    def book_params
-      params.require(:book).permit(:title, :author_id, :genre_id, :publication_date, :isbn10, :isbn13, :copies_available, :book_type, :digital_url, :shelf_location, :status)
-    end
+  def book_params
+    params.require(:book).permit(:title, :author_id, :genre_id, :publication_date, :isbn10, :isbn13, :cover_image)
+  end
 end

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 class Book < ApplicationRecord
+  include Rails.application.routes.url_helpers
   belongs_to :author
   belongs_to :genre
   has_many :wishlist_books
@@ -11,5 +12,11 @@ class Book < ApplicationRecord
   has_many :book_series
   has_many :series, through: :book_series
   has_one_attached :cover_image
+
+  def cover_image_url
+    return unless cover_image.attached?
+
+      rails_blob_url(cover_image, only_path: true) # Use instance method to generate URL
+  end
 
 end

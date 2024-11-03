@@ -16,6 +16,7 @@ Rails.application.routes.draw do
   resources :genres
   resources :authors
   resources :books
+  post 'books/scan', to: 'books#scan'
   resources :series
   get 'signup', to: 'members#new', as: 'signup'
   get 'login', to: 'sessions#new', as: 'login'

@@ -1,23 +1,29 @@
-# frozen_string_literal: true
 require 'net/http'
-require 'uri'
 require 'json'
 
 class OpenLibraryService
-  BASE_URL = 'https://openlibrary.org/api/volumes/brief/isbn'
+  BASE_URL = 'https://openlibrary.org/api/volumes/brief/isbn/'.freeze
 
-  def initialize(isbn)
-    @isbn = isbn
-  end
+  def self.fetch_book_details(isbn)
+    url = URI.parse("#{BASE_URL}#{isbn}.json")
+    response = Net::HTTP.get(url)
+    data = JSON.parse(response)
 
-  def fetch_book_data
-    uri = URI("#{BASE_URL}/#{@isbn}.json")
-    response = Net::HTTP.get_response(uri)
-
-    if response.is_a?(Net::HTTPSuccess)
-      JSON.parse(response.body)
-    else
-      { error: 'Unable to fetch book information', status: response.code }
+    # Check if the data includes book details
+    if data && data['records'] && !data['records'].empty?
+      record = data['records'].values.first
+      {
+        title: record['data']['title'],
+        author: record['data']['authors'].first['name'],
+        genre: record['data']['subjects']&.first,
+        publication_date: record['data']['publish_date'],
+        isbn10: record['data']['identifiers']['isbn_10']&.first,
+        isbn13: record['data']['identifiers']['isbn_13']&.first,
+        cover_image_url: record['data']['cover']['medium']  # Extract cover image URL
+      }
     end
+  rescue StandardError => e
+    Rails.logger.error("OpenLibraryService error: #{e.message}")
+    nil
   end
 end

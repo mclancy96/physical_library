@@ -6,7 +6,6 @@ class ApplicationController < ActionController::Base
   around_action :catch_not_found
 
   def home
-    flash[:notice] = 'Welcome home'
     @genres = Genre.all.limit(8) # Adjust number as needed
     @series = Series.joins(:books).distinct.limit(4)
     @reading_lists = current_user.reading_lists if logged_in?

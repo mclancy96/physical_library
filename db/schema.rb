@@ -10,13 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_11_03_030750) do
+ActiveRecord::Schema[7.1].define(version: 2024_11_03_041924) do
   create_table "authors", force: :cascade do |t|
     t.string "name"
     t.text "biography"
     t.datetime "dob"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "book_id"
+    t.index ["book_id"], name: "index_authors_on_book_id"
   end
 
   create_table "availability_calendars", force: :cascade do |t|
@@ -68,16 +70,16 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_03_030750) do
   end
 
   create_table "borrowings", force: :cascade do |t|
-    t.integer "book_id_id"
-    t.integer "member_id_id"
-    t.date "borrow_date"
-    t.date "due_date"
+    t.integer "member_id", null: false
+    t.integer "book_id", null: false
+    t.date "borrow_date", null: false
+    t.date "due_date", null: false
     t.date "return_date"
-    t.string "status"
+    t.string "status", default: "active"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["book_id_id"], name: "index_borrowings_on_book_id_id"
-    t.index ["member_id_id"], name: "index_borrowings_on_member_id_id"
+    t.index ["book_id"], name: "index_borrowings_on_book_id"
+    t.index ["member_id"], name: "index_borrowings_on_member_id"
   end
 
   create_table "genres", force: :cascade do |t|
@@ -87,12 +89,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_03_030750) do
   end
 
   create_table "likes", force: :cascade do |t|
-    t.integer "book_id_id"
-    t.integer "member_id_id"
+    t.integer "member_id", null: false
+    t.integer "book_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["book_id_id"], name: "index_likes_on_book_id_id"
-    t.index ["member_id_id"], name: "index_likes_on_member_id_id"
+    t.index ["book_id"], name: "index_likes_on_book_id"
+    t.index ["member_id", "book_id"], name: "index_likes_on_member_id_and_book_id", unique: true
+    t.index ["member_id"], name: "index_likes_on_member_id"
   end
 
   create_table "member_activities", force: :cascade do |t|
@@ -114,6 +117,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_03_030750) do
     t.string "password_digest"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "role_id"
+    t.index ["role_id"], name: "index_members_on_role_id"
   end
 
   create_table "notifications", force: :cascade do |t|
@@ -137,14 +142,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_03_030750) do
   end
 
   create_table "read_statuses", force: :cascade do |t|
-    t.integer "book_id_id"
-    t.integer "member_id_id"
-    t.string "status"
+    t.integer "member_id", null: false
+    t.integer "book_id", null: false
+    t.string "status", null: false
     t.date "finished_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["book_id_id"], name: "index_read_statuses_on_book_id_id"
-    t.index ["member_id_id"], name: "index_read_statuses_on_member_id_id"
+    t.index ["book_id"], name: "index_read_statuses_on_book_id"
+    t.index ["member_id", "book_id"], name: "index_read_statuses_on_member_id_and_book_id", unique: true
+    t.index ["member_id"], name: "index_read_statuses_on_member_id"
   end
 
   create_table "reading_lists", force: :cascade do |t|
@@ -181,9 +187,18 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_03_030750) do
     t.index ["member_id"], name: "index_reviews_on_member_id"
   end
 
+  create_table "roles", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "code", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "series", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "title"
+    t.text "description"
   end
 
   create_table "wishlist_books", id: false, force: :cascade do |t|
@@ -203,23 +218,24 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_03_030750) do
     t.index ["member_id"], name: "index_wishlists_on_member_id"
   end
 
+  add_foreign_key "authors", "books"
   add_foreign_key "availability_calendars", "books"
   add_foreign_key "book_copies", "books"
   add_foreign_key "book_series", "books"
   add_foreign_key "book_series", "series"
   add_foreign_key "books", "authors"
   add_foreign_key "books", "genres"
-  add_foreign_key "borrowings", "book_ids"
-  add_foreign_key "borrowings", "member_ids"
-  add_foreign_key "likes", "book_ids"
-  add_foreign_key "likes", "member_ids"
+  add_foreign_key "borrowings", "books"
+  add_foreign_key "borrowings", "members"
+  add_foreign_key "likes", "books"
+  add_foreign_key "likes", "members"
   add_foreign_key "member_activities", "books"
   add_foreign_key "member_activities", "members"
   add_foreign_key "notifications", "members"
   add_foreign_key "ratings", "books"
   add_foreign_key "ratings", "members"
-  add_foreign_key "read_statuses", "book_ids"
-  add_foreign_key "read_statuses", "member_ids"
+  add_foreign_key "read_statuses", "books"
+  add_foreign_key "read_statuses", "members"
   add_foreign_key "reading_lists", "books"
   add_foreign_key "reading_lists", "members"
   add_foreign_key "reservations", "books"

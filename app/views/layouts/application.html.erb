@@ -11,7 +11,7 @@
     <%= javascript_include_tag "application", "data-turbo-track": "reload" %>
   </head>
 
-  <body class="container text-center">
+  <body class="text-center">
   <%= render 'partials/navbar' if logged_in?%>
   <%= render 'partials/alert', flash: flash%>
 

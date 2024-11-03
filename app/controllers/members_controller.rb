@@ -9,8 +9,7 @@ class MembersController < ApplicationController
   end
 
   # GET /members/1 or /members/1.json
-  def show
-  end
+  def show; end
 
   # GET /members/new
   def new
@@ -18,13 +17,13 @@ class MembersController < ApplicationController
   end
 
   # GET /members/1/edit
-  def edit
-  end
+  def edit; end
 
   # POST /members or /members.json
   def create
     @member = Member.new(member_params)
     @member.join_date = Date.today
+    @member.role = Role.where(code: :user).first
     if @member.save
       flash[:notice] = "#{@member.name} created successfully!"
       redirect_to login_path

@@ -8,6 +8,7 @@ class Member < ApplicationRecord
   has_many :likes
   has_many :ratings
   has_many :rated_books, through: :ratings, source: :book
+  belongs_to :role, optional: true
   before_save { self.email = email.downcase }
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   validates :name, presence: true,

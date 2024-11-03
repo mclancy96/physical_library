@@ -2,7 +2,8 @@
 class Book < ApplicationRecord
   include Rails.application.routes.url_helpers
   belongs_to :author
-  belongs_to :genre
+  has_many :book_genres
+  has_many :genres, through: :book_genres
   has_many :wishlist_books
   has_many :wishlists, through: :wishlist_books
   has_many :likes

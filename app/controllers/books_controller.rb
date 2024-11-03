@@ -31,7 +31,6 @@ class BooksController < ApplicationController
       book = Book.new(
         title: book_data[:title],
         author:,
-        genre:,
         publication_date: book_data[:publication_date],
         isbn10: book_data[:isbn10],
         isbn13: book_data[:isbn13]
@@ -44,6 +43,10 @@ class BooksController < ApplicationController
       end
 
       if book.save
+        genres = book_data[:genres].split(', ').map do |genre_name|
+          Genre.find_or_create_by(name: genre_name)
+        end
+        book.genres << genres
         render json: { success: true, book: book.as_json.merge(cover_image_url: book.cover_image_url) }
       else
         render json: { success: false, error: book.errors.full_messages.join(", ") }

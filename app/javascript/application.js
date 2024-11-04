@@ -1,5 +1,6 @@
 import {Toast} from 'bootstrap';
 import {Html5Qrcode} from "html5-qrcode";
+import * as ActiveStorage from "@rails/activestorage"
 
 document.addEventListener('DOMContentLoaded', () => {
     const toastElList = document.querySelectorAll('.toast');
@@ -62,5 +63,5 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-
+ActiveStorage.start();
 

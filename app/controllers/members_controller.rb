@@ -23,7 +23,7 @@ class MembersController < ApplicationController
   def create
     @member = Member.new(member_params)
     @member.join_date = Date.today
-    @member.role = Role.where(code: :user).first
+    @member.role_id = Role.where(code: :member).first&.id
     if @member.save
       flash[:notice] = "#{@member.name} created successfully!"
       redirect_to login_path

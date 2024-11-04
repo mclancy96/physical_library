@@ -6,7 +6,7 @@
     "webpack-cli": "^5.1.4"
   },
   "scripts": {
-    "build": "echo no"
+    "build": "webpack --config webpack.config.js"
   },
   "dependencies": {
     "@hotwired/stimulus": "^3.2.2",

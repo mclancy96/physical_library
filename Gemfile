@@ -77,6 +77,7 @@ end
 group :production do
   gem 'terser'
   gem 'pg'
+  gem 'aws-sdk-s3'
 end
 
 group :test do

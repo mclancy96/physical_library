@@ -1,10 +1,6 @@
-
-
-
-import * as ActiveStorage from "@rails/activestorage";
-import {Toast} from "bootstrap";
+// Configure your import map in config/importmap.rb. Read more: https://github.com/rails/importmap-rails
 import { Html5Qrcode } from "html5-qrcode";
-const setupScan = () => {
+export const setupScan = () => {
     console.log("Scan book has loaded");
     const scanButton = document.getElementById("scan-barcode-btn");
     const reader = document.getElementById("reader");
@@ -61,29 +57,3 @@ const setupScan = () => {
 }
 
 document.addEventListener('DOMContentLoaded', setupScan);
-console.log("I am in the application.js")
-
-
-const selectToast = () => {
-    console.log("Toast has loaded");
-    const toastElList = document.querySelectorAll('.toast');
-    toastElList.forEach((toastEl) => {
-        const toast = new Toast(toastEl);
-        toast.show();
-    });
-}
-
-const setToasts = ()=> {
-    if (document.readyState !== "loading") {
-        selectToast();
-    } else {
-        document.addEventListener('DOMContentLoaded', selectToast, { once: true });
-    }
-}
-
-document.addEventListener('DOMContentLoaded', setToasts);
-
-
-// Initialize Rails UJS and ActiveStorage
-ActiveStorage.start()
-

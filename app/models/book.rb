@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 class Book < ApplicationRecord
   include Rails.application.routes.url_helpers
+
   has_many :author_books
   has_many :authors, through: :author_books
   has_many :book_genres

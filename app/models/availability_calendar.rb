@@ -1,2 +1,0 @@
-class AvailabilityCalendar < ApplicationRecord
-end

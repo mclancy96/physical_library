@@ -3,7 +3,6 @@
 Rails.application.routes.draw do
   root 'application#home'
   resources :book_copies
-  resources :availability_calendars
   resources :notifications, only: %i[create update]
   resources :reviews
   resources :wishlists
@@ -23,4 +22,5 @@ Rails.application.routes.draw do
   post 'login', to: 'sessions#create'
   get 'logout', to: 'sessions#destroy', as: 'logout'
   get 'books/isbn/:isbn', to: 'books#book_data_lookup'
+  get 'toast', to: 'application#toast', as: 'toast'
 end

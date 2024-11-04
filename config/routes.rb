@@ -2,8 +2,8 @@
 
 Rails.application.routes.draw do
   root 'application#home'
+  get 'toast', to: 'application#toast'
   resources :book_copies
-  resources :availability_calendars
   resources :notifications, only: %i[create update]
   resources :reviews
   resources :wishlists

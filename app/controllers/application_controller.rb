@@ -12,6 +12,10 @@ class ApplicationController < ActionController::Base
     render 'home'
   end
 
+  def toast
+    flash[:notice] = 'test toast'
+    redirect_to root_path
+  end
   # If inclined to implement
   # def search
   #   @query = params[:query]

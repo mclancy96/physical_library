@@ -6,15 +6,17 @@
     "webpack-cli": "^5.1.4"
   },
   "scripts": {
-    "build": "webpack --config webpack.config.js"
+    "build": "echo no"
   },
   "dependencies": {
     "@hotwired/stimulus": "^3.2.2",
     "@hotwired/turbo-rails": "^8.0.12",
     "@popperjs/core": "^2.11.8",
     "@rails/activestorage": "^7.2.200",
+    "@rails/ujs": "^7.1.3-4",
     "bootstrap": "^5.3.3",
     "html5-qrcode": "^2.3.8",
-    "popper.js": "^1.16.1"
+    "popper.js": "^1.16.1",
+    "turbolinks": "^5.2.0"
   }
 }

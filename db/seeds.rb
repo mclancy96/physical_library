@@ -8,134 +8,121 @@
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
 # Clear existing data
-BookCopy.destroy_all
-Reservation.destroy_all
+WishlistBook.destroy_all
+AuthorBook.destroy_all
+BookGenre.destroy_all
+BookSeries.destroy_all
 Borrowing.destroy_all
 Like.destroy_all
-Rating.destroy_all
-Review.destroy_all
-ReadStatus.destroy_all
-Wishlist.destroy_all
-MemberActivity.destroy_all
 Notification.destroy_all
-
-# Then, destroy records from the members table
-Member.where.not(name: 'Mike').destroy_all
-# Next, clear the books and their related data
+Rating.destroy_all
+ReadStatus.destroy_all
+Reservation.destroy_all
+Review.destroy_all
+Wishlist.destroy_all
+BookCopy.destroy_all
 Book.destroy_all
-
-# Finally, clear authors and genres
 Author.destroy_all
 Genre.destroy_all
+Series.destroy_all
+Member.where.not(name: 'Mike').destroy_all
 Role.destroy_all
 
-# Create Roles
-admin_role = Role.create(name: 'Admin', code: 'admin')
-user_role = Role.create(name: 'User', code: 'user')
-guest_role = Role.create(name: 'Guest', code: 'guest')
+# Roles
+Role.create!(name: 'Admin', code: 'admin')
+member_role = Role.create!(name: 'Member', code: 'member')
 
-# Create Members
-members = [
-  { name: 'Alice Smith', email: 'alice@example.com', join_date: Date.today, password: 'password123', role: user_role },
-  { name: 'Bob Johnson', email: 'bob@example.com', join_date: Date.today, password: 'password123', role: admin_role },
-  { name: 'Charlie Brown', email: 'charlie@example.com', join_date: Date.today, password: 'password123',
-    role: guest_role },
-]
+# Members
+alex = Member.create!(
+  name: 'Alex Johnson',
+  email: 'alex.johnson@example.com',
+  join_date: Date.new(2023, 5, 12),
+  password: 'password',
+  password_confirmation: 'password',
+  role_id: member_role.id
+)
 
-members.each do |member_data|
-  Member.create(member_data)
-end
+# Genres
+fantasy = Genre.create!(name: 'Fantasy')
+mystery = Genre.create!(name: 'Mystery')
+Genre.create!(name: 'Science Fiction')
 
-# Create Authors
+# Authors
+author1 = Author.create!(name: 'J.K. Rowling', biography: 'British author best known for the Harry Potter series.',
+                         dob: Date.new(1965, 7, 31))
+author2 = Author.create!(name: 'Agatha Christie',
+                         biography: 'Famous for mystery novels featuring Hercule Poirot and Miss Marple.',
+                         dob: Date.new(1890, 9, 15))
 
-Author.create(name: 'George Orwell', biography: 'English novelist and essayist', dob: '1903-06-25')
-Author.create(name: 'J.K. Rowling', biography: 'British author, best known for the Harry Potter series',
-              dob: '1965-07-31')
-Author.create(name: 'F. Scott Fitzgerald', biography: 'American novelist and short story writer', dob: '1896-09-24')
+# Series
+hp_series = Series.create!(title: 'Harry Potter', description: "A young wizard's adventures.")
+detective_series = Series.create!(title: 'Hercule Poirot Mysteries',
+                                  description: 'Detective novels featuring Hercule Poirot.')
 
-# Create Genres
+# Books
+book1 = Book.create!(
+  title: "Harry Potter and the Philosopher's Stone",
+  publication_year: 1997,
+  isbn10: '0747532699',
+  isbn13: '9780747532699',
+  page_count: 223
+)
+book2 = Book.create!(
+  title: 'Murder on the Orient Express',
+  publication_year: 1934,
+  isbn10: '0062073508',
+  isbn13: '9780062073501',
+  page_count: 256
+)
 
-Genre.create(name: 'Fiction')
-Genre.create(name: 'Fantasy')
-Genre.create(name: 'Classic')
-Genre.create(name: 'Science Fiction')
+# AuthorBooks
+AuthorBook.create!(author_id: author1.id, book_id: book1.id)
+AuthorBook.create!(author_id: author2.id, book_id: book2.id)
 
-# Create Books using the created Authors and Genres
-books = [
-  { title: '1984', author: Author.where(name: 'George Orwell').first, genre: Genre.where(name: 'Science Fiction').first, publication_date: '1949-06-08',
-    isbn10: '0451524934', isbn13: '978-0451524935', copies_available: 5, book_type: 'physical' },
-  { title: 'Harry Potter and the Sorcerer\'s Stone', author: Author.where(name: 'J.K. Rowling').first,
-    genre: Genre.where(name: 'Fantasy').first, publication_date: '1997-06-26', isbn10: '0439708184', isbn13: '978-0439708180', copies_available: 3, book_type: 'physical' },
-  { title: 'The Great Gatsby', author: Author.where(name: 'F. Scott Fitzgerald').first, genre: Genre.where(name: 'Classic').first,
-    publication_date: '1925-04-10', isbn10: '0743273567', isbn13: '978-0743273565', copies_available: 4, book_type: 'physical' },
-]
+# BookSeries
+BookSeries.create!(book_id: book1.id, series_id: hp_series.id)
+BookSeries.create!(book_id: book2.id, series_id: detective_series.id)
 
-books.each do |book_data|
-  Book.create(book_data)
-end
+# BookGenres
+BookGenre.create!(book_id: book1.id, genre_id: fantasy.id)
+BookGenre.create!(book_id: book2.id, genre_id: mystery.id)
 
-# Create Book Copies
-book_copies = [
-  { book: Book.where(title: '1984').first, barcode: '1234567890', condition: 'Good', acquisition_date: Date.today, shelf_location: 'A1' },
-  { book: Book.where(isbn10: '0439708184').first, barcode: '0987654321', condition: 'New', acquisition_date: Date.today, shelf_location: 'B2' },
-  { book: Book.where(isbn10: '0743273567').first, barcode: '1122334455', condition: 'Fair', acquisition_date: Date.today, shelf_location: 'C3' },
-]
+# BookCopies
+BookCopy.create!(book_id: book1.id, barcode: '12345', condition: 'Good',
+                 acquisition_date: Date.new(2020, 1, 15),
+                 shelf_location: 'A1')
+BookCopy.create!(book_id: book2.id, barcode: '67890', condition: 'Fair',
+                 acquisition_date: Date.new(2019, 6, 23),
+                 shelf_location: 'B3')
 
-book_copies.each do |copy_data|
-  BookCopy.create(copy_data)
-end
+# Borrowings
+Borrowing.create!(member_id: alex.id, book_id: book1.id, borrow_date: Date.new(2024, 1, 1),
+                  due_date: Date.new(2024, 1, 15), status: 'active')
 
-# Create Wishlists
-wishlists = [
-  { member: Member.first, book_id: Book.where(title: '1984').first&.id, request_status: 'Pending', added_date: Date.today },
-  { member: Member.first, book_id: Book.where(isbn10: '0439708184').first&.id, request_status: 'Approved', added_date: Date.today },
-  { member: Member.last, book_id: Book.where(isbn10: '0439708184').first&.id, request_status: 'Rejected', added_date: Date.today },
-]
+# Likes
+Like.create!(member_id: alex.id, book_id: book2.id)
 
-wishlists.each do |wishlist_data|
-  Wishlist.create(wishlist_data)
-end
+# Notifications
+Notification.create!(member_id: alex.id, notification_type: 'reminder', message: 'Your book is due soon!', read: false)
 
-# Create Reservations
-reservations = [
-  { member: Member.first, book_id: Book.where(title: '1984').first&.id, reservation_date: Date.today, expiration_date: Date.today + 7.days,
-    status: 'Active' },
-  { member: Member.last, book_id: Book.where(isbn10: '0439708184').first&.id, reservation_date: Date.today, expiration_date: Date.today + 14.days,
-    status: 'Active' },
-]
+# Ratings
+Rating.create!(member_id: alex.id, book_id: book1.id, rating: 5)
 
-reservations.each do |reservation_data|
-  Reservation.create(reservation_data)
-end
+# ReadStatuses
+ReadStatus.create!(member_id: alex.id, book_id: book2.id, status: 1,
+                   finished_date: Date.new(2024, 3, 15),
+                   last_page_read: 200)
 
-# Create Reviews
-reviews = [
-  { member: Member.first, book_id: Book.where(title: '1984').first&.id, review_text: 'A chilling dystopian novel.', rating: 5 },
-  { member: Member.first, book_id: Book.where(isbn10: '0439708184').first&.id, review_text: 'A magical adventure for all ages.', rating: 4 },
-]
+# Reservations
+Reservation.create!(member_id: alex.id, book_id: book1.id, reservation_date: Date.new(2024, 1, 5),
+                    expiration_date: Date.new(2024, 1, 10), status: 'reserved')
 
-reviews.each do |review_data|
-  Review.create(review_data)
-end
+# Reviews
+Review.create!(member_id: alex.id, book_id: book1.id, review_text: 'An absolute classic!')
 
-# Create Ratings
-ratings = [
-  { member: Member.first, book_id: Book.where(title: '1984').first&.id, rating: 5 },
-  { member: Member.second, book_id: Book.where(isbn10: '0439708184').first&.id, rating: 4 },
-]
+# Wishlist
+wishlist = Wishlist.create!(member_id: alex.id, book_id: book2.id, title: 'Must Reads', request_status: 'pending',
+                            added_date: Date.new(2024, 1, 20))
+WishlistBook.create!(wishlist_id: wishlist.id, book_id: book2.id)
 
-ratings.each do |rating_data|
-  Rating.create(rating_data)
-end
-
-# Create Borrowings
-borrowings = [
-  { member: Member.first, book_id: Book.where(title: '1984').first&.id, borrow_date: Date.today, due_date: Date.today + 30.days, return_date: nil,
-    status: 'Borrowed' },
-]
-
-borrowings.each do |borrowing_data|
-  Borrowing.create(borrowing_data)
-end
-
-puts "Seed data created successfully!"
+puts 'Seed data created successfully!'

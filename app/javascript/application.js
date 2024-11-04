@@ -1,3 +1,4 @@
+// Configure your import map in config/importmap.rb. Read more: https://github.com/rails/importmap-rails
 import {Toast} from 'bootstrap';
 import {Html5Qrcode} from "html5-qrcode";
 

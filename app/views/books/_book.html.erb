@@ -4,15 +4,19 @@
     <%= book.title %>
   </p>
 
-<!--  <p>-->
-<!--    <strong>Author:</strong>-->
-    <%#= book.author %>
-<!--  </p>-->
+  <div>
+    <p><strong>Author(s):</strong></p>
+      <% book.authors.each do |author| %>
+        <p><%= author.name %></p>
+      <% end %>
+  </div>
 
-<!--  <p>-->
-<!--    <strong>Genre:</strong>-->
-    <%#= book.genre_id %>
-<!--  </p>-->
+  <div>
+    <p><strong>Genre(s):</strong></p>
+      <% book.genres.each do |genre| %>
+        <p><%= genre.name %></p>
+      <% end %>
+  </div>
 
   <p>
     <strong>Publication year:</strong>
@@ -43,10 +47,10 @@
     <% end %>
   </p>
 
-  <p>
-    <strong>Shelf location:</strong>
-    <%= book.shelf_location %>
-  </p>
+<!--  <p>-->
+<!--    <strong>Shelf location:</strong>-->
+    <%#= book.shelf_location %>
+<!--  </p>-->
 
 <!--  <p>-->
 <!--    <strong>Status:</strong>-->

@@ -13,9 +13,16 @@ class OpenLibraryService
     url = URI.parse("#{BASE_URL}#{isbn}.json")
     response = Net::HTTP.get(url)
     data = JSON.parse(response)
+
+    return nil unless data['records']
+
     # Check if the data includes book details
     # Parse the JSON response
-    book_info = data['records'].is_a?(Hash) ? data['records'].values.first : data['records'].first # Get the first record from records
+    book_info = if data['records'].is_a?(Hash)
+                  data['records'].values.first
+                elsif data['records'].is_a?(Array)
+                  data['records'].first
+                end
 
     return nil unless book_info
 

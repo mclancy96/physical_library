@@ -35,7 +35,8 @@ class BooksController < ApplicationController
         title: book_data[:title],
         publication_year: book_data[:publication_year],
         isbn10: book_data[:isbn10],
-        isbn13: book_data[:isbn13]
+        isbn13: book_data[:isbn13],
+        page_count: book_data[:number_of_pages],
       )
 
       # Download and attach the cover image

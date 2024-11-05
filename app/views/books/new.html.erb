@@ -14,9 +14,15 @@
   <h2 class="m5">Search by ISBN</h2>
   <div class="mb-3 text-start">
     <%= form_with url: books_scan_path do |form| %>
-      <%= form.label :isbn, class: 'form-label' %>
-      <%= form.text_field :isbn, placeholder: '9781624144295', class: 'form-control', 'aria-describedby': 'isbn-form-help'%>
-      <div class="form-text" id="isbn-form-help">Example help text goes outside the input group.</div>
+
+      <div class="m-3">
+        <%= form.label :isbn, "Enter the book's ISBN in the ISBN13 format (ISBN10 will work too)", class: 'form-label'  %>
+        <div class="input-group mb-3">
+          <%= form.text_field :isbn, placeholder: '9781624144295', class: 'form-control', 'aria-describedby': 'submit-isbn'%>
+          <%= form.submit class: 'btn btn-primary', type: 'submit', id: 'submit-isbn' %>
+        </div>
+      </div>
+
     <% end %>
   </div>
   <hr>

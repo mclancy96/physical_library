@@ -9,11 +9,10 @@ const selectToast = () => {
     });
 }
 
-export const setToasts = ()=> {
-    if (document.readyState !== "loading") {
-        selectToast();
-    } else {
-        document.addEventListener('DOMContentLoaded', selectToast, { once: true });
-    }
+if (document.readyState !== "loading") {
+    selectToast();
+} else {
+    document.addEventListener('DOMContentLoaded', selectToast, {once: true});
 }
+
 

@@ -13,6 +13,7 @@ class OpenLibraryService
     url = URI.parse("#{BASE_URL}#{isbn}.json")
     response = Net::HTTP.get(url)
     data = JSON.parse(response)
+    puts "Here is the data response form the api: #{data}"
 
     return nil unless data['records']
 

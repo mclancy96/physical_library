@@ -1,15 +1,18 @@
-<h1><%= @book.title %></h1>
-<p><strong>Author:</strong> <%= link_to @book.author.name, author_path(@book.author) %></p>
-<p><strong>Genre:</strong> <%= @book.genre.name %></p>
-<!--<p><strong>Description:</strong> <%#= @book.description %></p>-->
-
-<% if logged_in? %>
-  <%= form_with model: @book.ratings.build, local: true do |f| %>
-    <%= f.hidden_field :user_id, value: current_user.id %>
-    <div class="form-group">
-      <%= f.label :value, "Your Rating" %>
-      <%= f.number_field :value, in: 1..5, step: 1, class: 'form-control' %>
-    </div>
-    <%= f.submit 'Submit Rating', class: 'btn btn-primary mt-2' %>
+<h1><i><%= @book.title.titleize %></i></h1>
+<p><strong>Author(s):</strong>
+  <%@book.authors.each do |author| %>
+    <%= link_to "#{author.name} ", author_path(author) %>
   <% end %>
-<% end %>
+  </p>
+<p><strong>Genre(s):</strong>
+  <%@book.genres.each do |genre| %>
+    <%= link_to "#{genre.name} ", genre_path(genre) %>
+  <% end %>
+</p>
+
+<p><strong>Page Count:</strong> <%=@book.page_count %></p>
+<p><strong>Publication Year:</strong> <%=@book.publication_year %></p>
+<p><strong>ISBN-10:</strong> <%=@book.isbn10 %></p>
+<p><strong>ISBN-13:</strong> <%=@book.isbn13 %></p>
+
+<%= link_to "<- Back to Book Index", books_path %>

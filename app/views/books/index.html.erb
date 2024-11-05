@@ -2,6 +2,10 @@
 
 <h1>Books</h1>
 
+<%= link_to "New book", new_book_path %>
+
+<hr>
+
 <div id="books">
   <% @books.each do |book| %>
     <%= render book %>
@@ -14,4 +18,4 @@
 
 
 
-<%= link_to "New book", new_book_path %>
+

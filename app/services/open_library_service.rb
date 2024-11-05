@@ -15,7 +15,7 @@ class OpenLibraryService
     data = JSON.parse(response)
     # Check if the data includes book details
     # Parse the JSON response
-    book_info = data['records']&.values&.first # Get the first record from records
+    book_info = data['records'].is_a?(Hash) ? data['records'].values.first : data['records'].first # Get the first record from records
 
     return nil unless book_info
 

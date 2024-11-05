@@ -45,7 +45,7 @@ class ApplicationController < ActionController::Base
 
   def catch_not_found
     yield
-  rescue ActiveRecord::RecordNotFound
-    redirect_to root_path, flash: { error: 'Record not found.' }
+  rescue StandardError
+    redirect_to root_path, flash: { error: 'Error occurred.' }
   end
 end

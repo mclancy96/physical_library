@@ -26,7 +26,12 @@ class Book < ApplicationRecord
 
   def cover_image_url
     return unless cover_image.attached?
-      rails_blob_url(cover_image, only_path: true) # Use instance method to generate URL
+
+    rails_blob_url(cover_image, only_path: true) # Use instance method to generate URL
+  end
+
+  def liked_by?(current_member)
+    Like.where(book_id: id, member_id: current_member.id).exists?
   end
 
 end

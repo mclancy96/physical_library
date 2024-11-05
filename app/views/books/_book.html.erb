@@ -1,60 +1,26 @@
-<div id="<%= dom_id book %>">
-  <p>
-    <strong>Title:</strong>
-    <%= book.title %>
-  </p>
-
-  <div>
-    <p><strong>Author(s):</strong></p>
-      <% book.authors.each do |author| %>
-        <p><%= author.name %></p>
-      <% end %>
-  </div>
-
-  <div>
-    <p><strong>Genre(s):</strong></p>
-      <% book.genres.limit(5).each do |genre| %>
-        <p><%= genre.name %></p>
-      <% end %>
-  </div>
-
-  <p>
-    <strong>Publication year:</strong>
-    <%= book.publication_year %>
-  </p>
-
-  <p>
-    <strong>Isbn10:</strong>
-    <%= book.isbn10 %>
-  </p>
-
-  <p>
-    <strong>Isbn13:</strong>
-    <%= book.isbn13 %>
-  </p>
-
-<!--  <p>-->
-<!--    <strong>Copies available:</strong>-->
-    <%#= book.copies_available %>
-<!--  </p>-->
-
-  <p>
-    <strong>Cover Image:</strong><br>
-    <% if book.cover_image.attached? %>
-      <%= image_tag book.cover_image.variant(resize_to_limit: [300, 300]) %>
+<div class="col-lg-4 col-md-6 mb-4">
+  <div class="card h-100">
+    <% if book.cover_image.present? %>
+      <%= link_to image_tag(book.cover_image.variant(resize_to_limit: [200, 200]), class: 'card-img-top img-thumbnail img-responsive thumbnail', alt: "#{book.title} cover image"), book_path(book) %>
     <% else %>
-      <em>No cover image available</em>
+      <%=link_to image_tag("placeholder-image.png", class: 'card-img-top img-fluid thumbnail', alt: "Placeholder cover image"), book_path(book) %>
     <% end %>
-  </p>
 
-<!--  <p>-->
-<!--    <strong>Shelf location:</strong>-->
-    <%#= book.shelf_location %>
-<!--  </p>-->
-
-<!--  <p>-->
-<!--    <strong>Status:</strong>-->
-    <%#= book.status %>
-<!--  </p>-->
-
+    <div class="card-body">
+      <h5 class="card-title"><strong><%= book.title.titleize %></strong></h5>
+      <p class="card-text"><strong>Publication Year:</strong> <%= book.publication_year %></p>
+      <p class="card-text"><strong>Genres:</strong>
+        <% Genre.joins(:books).select('genres.*, COUNT(books.id)').where("books.id = #{book.id}").group('genres.id').order('COUNT(books.id) DESC, name').join(', ') %>
+      </p>
+      <p class="card-text"><strong>Authors:</strong> <%= book.authors.pluck(:name).join(', ') %></p>
+      <p class="card-text"><strong>Page Count:</strong> <%= book.page_count %></p>
+      <p class="card-text"><strong>ISBN-10:</strong> <%= book.isbn10 %></p>
+      <p class="card-text"><strong>ISBN-13:</strong> <%= book.isbn13 %></p>
+      <p class="card-text"><strong>Average Rating:</strong> 5</p>
+      <button class="like-button" data-book-id="<%= book.id %>">
+        <i class="heart-icon fas <%= book.liked_by?(current_user) ? 'fa-heart' : 'fa-heart-o' %>"></i>
+      </button>
+    </div>
+  </div>
 </div>
+

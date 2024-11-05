@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   resources :reservations
   resources :read_statuses
   resources :ratings
-  resources :likes
+  resources :likes, only: %i[create destroy]
   resources :borrowings
   resources :members, except: %i[new]
   resources :genres

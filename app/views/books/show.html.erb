@@ -6,7 +6,7 @@
   </p>
 <p><strong>Genre(s):</strong>
   <%@book.genres.each do |genre| %>
-    <%= link_to "#{genre.name} ", genre_path(genre) %>
+    <%= "#{link_to "#{genre.name}", genre_path(genre)} " %>
   <% end %>
 </p>
 

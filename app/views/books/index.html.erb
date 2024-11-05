@@ -6,16 +6,12 @@
 
 <hr>
 
-<div id="books">
-  <% @books.each do |book| %>
-    <%= render book %>
-    <p>
-      <%= link_to "Show this book", book %>
-    </p>
-    <hr>
-  <% end %>
+<div class="container">
+  <div class="row">
+    <% @books.each do |book| %>
+      <%= render partial: 'book', locals: { book: book } %>
+    <% end %>
+  </div>
 </div>
-
-
 
 

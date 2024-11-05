@@ -51,12 +51,15 @@ class BooksController < ApplicationController
         end
         book.genres << genres
         book.authors << authors
-        render json: { success: true, book: book.as_json.merge(cover_image_url: book.cover_image_url) }
+        flash[:success] = "Successfully added #{book_data[:title]}"
+        redirect_to book_path(book)
       else
-        render json: { success: false, error: book.errors.full_messages.join(', ') }
+        flash[:error] = book.errors.full_messages
+        redirect_to new_book_path
       end
     else
-      render json: { success: false, error: 'Book information not found' }
+      flash[:error] = "Book information not found"
+      redirect_to new_book_path
     end
   end
 

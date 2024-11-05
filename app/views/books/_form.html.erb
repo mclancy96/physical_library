@@ -41,24 +41,15 @@
     <%= form.text_field :isbn13, class: 'form-control' %>
   </div>
 
-  <div class="m-3">
-    <%= form.label :copies_available, style: "display: block", class: 'form-label' %>
-    <%= form.number_field :copies_available, class: 'form-control' %>
-  </div>
 
   <div class="m-3">
-    <%= form.label :book_type, style: "display: block", class: 'form-label' %>
-    <%= form.text_field :book_type, class: 'form-control' %>
+    <%= form.label :page_count, style: "display: block", class: 'form-label' %>
+    <%= form.number_field :page_count, class: 'form-control', min: 0 %>
   </div>
 
   <div class="form-group m-3">
     <%= form.label :cover_image, "Cover Image", class: 'form-label' %>
     <%= form.file_field :cover_image, class: "form-control" %>
-  </div>
-
-  <div class="m-3">
-    <%= form.label :shelf_location, style: "display: block", class: 'form-label' %>
-    <%= form.text_field :shelf_location, class: 'form-control' %>
   </div>
 
   <div>

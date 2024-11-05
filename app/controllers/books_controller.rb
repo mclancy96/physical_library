@@ -21,45 +21,54 @@ class BooksController < ApplicationController
   def scan
     isbn = params[:isbn]
     book_data = OpenLibraryService.fetch_book_details(isbn.to_s)
-    puts "returned book_date: #{book_data}"
 
     if book_data
       # Create or find the authors
       authors = book_data[:authors].map do |author|
-        puts "author_data: #{author} "
         Author.find_or_create_by(name: author)
       end
 
-      # Create the book record
-      book = Book.new(
-        title: book_data[:title],
-        publication_year: book_data[:publication_year].to_i,
-        isbn10: book_data[:isbn10],
-        isbn13: book_data[:isbn13],
-        page_count: book_data[:number_of_pages].to_i,
-      )
+      if Book.where(isbn13: book_data[:isbn13]).count.zero?
+        # Create the book record
+        book = Book.new(
+          title: book_data[:title],
+          publication_year: book_data[:publication_year].to_i,
+          isbn10: book_data[:isbn10],
+          isbn13: book_data[:isbn13],
+          page_count: book_data[:number_of_pages].to_i
+        )
 
-      # Download and attach the cover image
-      if book_data[:cover_image_url]
-        cover_image_file = URI.open(book_data[:cover_image_url])
-        book.cover_image.attach(io: cover_image_file, filename: "cover_#{isbn}.jpg")
-      end
-
-      if book.save
-        genres = book_data[:genres].map do |genre_name|
-          Genre.find_or_create_by(name: genre_name)
+        # Download and attach the cover image
+        if book_data[:cover_image_url]
+          cover_image_file = URI.open(book_data[:cover_image_url])
+          book.cover_image.attach(io: cover_image_file, filename: "cover_#{isbn}.jpg")
         end
-        book.genres << genres
-        book.authors << authors
-        flash[:success] = "Successfully added #{book_data[:title]}"
-        redirect_to book_path(book)
+
+        respond_to do |format|
+          if book.save
+            genres = book_data[:genres].map do |genre_name|
+              Genre.find_or_create_by(name: genre_name)
+            end
+            book.genres << genres
+            book.authors << authors
+            format.html { redirect_to book_path(book), success: "Successfully added #{book_data[:title]}" }
+            format.json { render json: { success: true, book: book }, status: :created, location: book }
+          else
+            format.html { render new_book_path, error: book.errors.full_messages }
+            format.json { render json: { success: false, errors: book.errors.full_messages }, status: :unprocessable_entity }
+          end
+        end
       else
-        flash[:error] = book.errors.full_messages
-        redirect_to new_book_path
+        respond_to do |format|
+          format.html { render new_book_path, error: 'Book already exists!' }
+          format.json { render json: { success: false, errors: 'Book already exists' }, error: :unprocessable_entity }
+        end
       end
     else
-      flash[:error] = "Book information not found"
-      redirect_to new_book_path
+      respond_to do |format|
+        format.html { render new_book_path, error: 'No book found' }
+        format.json { render json: { success: false, errors: 'Book could not be found' }, status: :unprocessable_entity }
+      end
     end
   end
 

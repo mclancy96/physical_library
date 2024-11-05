@@ -54,6 +54,3 @@ if (scanButton) {
         );
     });
 }
-
-
-document.addEventListener('DOMContentLoaded', setupScan);

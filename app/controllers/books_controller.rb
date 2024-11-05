@@ -44,7 +44,6 @@ class BooksController < ApplicationController
           book.cover_image.attach(io: cover_image_file, filename: "cover_#{isbn}.jpg")
         end
 
-        respond_to do |format|
           if book.save
             genres = book_data[:genres].map do |genre_name|
               Genre.find_or_create_by(name: genre_name)
@@ -57,7 +56,6 @@ class BooksController < ApplicationController
             format.html { render new_book_path, error: book.errors.full_messages }
             format.json { render json: { success: false, errors: book.errors.full_messages }, status: :unprocessable_entity }
           end
-        end
       else
         respond_to do |format|
           format.html { render new_book_path, error: 'Book already exists!' }

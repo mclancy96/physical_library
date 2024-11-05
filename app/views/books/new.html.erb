@@ -9,8 +9,9 @@
     <div id="reader" style="display: none;"></div>
     <%= form_with url: books_scan_path, id: 'book-scan' do |form| %>
       <div class="m-3 text-center">
+        <p><strong>Status:</strong> <span id="book-info">Click the button above to begin scanning.</span></p>
         <div class="input-group mb-3">
-          <%= form.text_field :isbn, placeholder: 'Click the button above to begin scanning.', class: 'form-control', 'aria-describedby': 'submit-isbn', id: 'book-info', disabled: 'true' %>
+          <%= form.text_field :isbn, class: 'form-control', 'aria-describedby': 'submit-isbn', id: 'book-input', hidden: 'true' %>
         </div>
       </div>
     <% end %>

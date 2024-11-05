@@ -17,7 +17,10 @@ document.addEventListener('DOMContentLoaded', () => {
         scanButton.addEventListener("click", () => {
             reader.style.display = "block";
             const html5QrCode = new Html5Qrcode("reader");
-
+            const qrCodeErrorCallback = errorMessage => {
+                console.warn(`QR error: ${errorMessage}`);
+                return Promise.reject(errorMessage);
+            };
             const qrCodeSuccessCallback = (decodedText, decodedResult) => {
                 reader.style.display = "none";
                 html5QrCode.stop().then(() => {
@@ -48,10 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             };
 
-            const qrCodeErrorCallback = errorMessage => {
-                console.warn(`QR error: ${errorMessage}`);
-                return Promise.reject(error);
-            };
+
 
             html5QrCode.start(
                 { facingMode: "environment" },

@@ -1,56 +1,65 @@
 <div class="container">
   <h1>Create a New Book</h1>
-  <p>There are three ways to add a book: look it up by scanning it, look it up by isbn, or type in the details manually</p>
+  <p>There are three ways to add a book: look it up by scanning it, look it up by isbn, or type in the details
+    manually</p>
 
   <h2 class="m5">Scan Book Barcode</h2>
-  <div>
+  <div class="mb-3">
     <button id="scan-barcode-btn" class="btn btn-primary">Scan Book Barcode</button>
     <div id="reader" style="display: none;"></div>
-  </div>
-  <div id="book-info"></div>
-
-  <hr>
-
-  <h2 class="m5">Search by ISBN</h2>
-  <div class="mb-3 text-start">
-    <%= form_with url: books_scan_path do |form| %>
-
-      <div class="m-3">
-        <%= form.label :isbn, "Enter the book's ISBN in the ISBN13 format (ISBN10 will work too)", class: 'form-label'  %>
+    <%= form_with url: books_scan_path, id: 'book-scan' do |form| %>
+      <div class="m-3 text-center">
         <div class="input-group mb-3">
-          <%= form.text_field :isbn, placeholder: '9781624144295', class: 'form-control', 'aria-describedby': 'submit-isbn'%>
-          <%= form.submit class: 'btn btn-primary', type: 'submit', id: 'submit-isbn' %>
+          <%= form.text_field :isbn, placeholder: 'Click the button above to begin scanning.', class: 'form-control', 'aria-describedby': 'submit-isbn', id: 'book-info', disabled: 'true' %>
         </div>
       </div>
-
     <% end %>
   </div>
-  <hr>
+  <div>
 
-  <h2 class="m5">Click the dropdown below to show the manual entry form</h2>
+    <hr>
 
-  <div class="accordion border-2 m-2">
-    <div class="accordion-item">
-      <h2 class="accordion-header">
-        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-          Click here to manually enter book information
-        </button>
-      </h2>
-      <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-        <div class="accordion-body text-start"><%= render "form", book: @book %></div>
+    <h2 class="m5">Search by ISBN</h2>
+    <div class="mb-3 text-start">
+      <%= form_with url: books_scan_path do |form| %>
+
+        <div class="m-3">
+          <%= form.label :isbn, "Enter the book's ISBN in the ISBN13 format (ISBN10 will work too)", class: 'form-label' %>
+          <div class="input-group mb-3">
+            <%= form.text_field :isbn, placeholder: '9781624144295', class: 'form-control', 'aria-describedby': 'submit-isbn' %>
+            <%= form.submit class: 'btn btn-primary', type: 'submit', id: 'submit-isbn' %>
+          </div>
+        </div>
+
+      <% end %>
+    </div>
+    <hr>
+
+    <h2 class="m5">Click the dropdown below to show the manual entry form</h2>
+
+    <div class="accordion border-2 m-2">
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+            Click here to manually enter book information
+          </button>
+        </h2>
+        <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+          <div class="accordion-body text-start"><%= render "form", book: @book %></div>
+        </div>
       </div>
+    </div>
+
+    <br>
+
+    <!-- app/views/books/new.html.erb -->
+
+
+    <br>
+
+    <div>
+      <%= link_to "Back to books", books_path %>
     </div>
   </div>
 
-  <br>
-
-  <!-- app/views/books/new.html.erb -->
-
-
-  <br>
-
-  <div>
-    <%= link_to "Back to books", books_path %>
-  </div>
 </div>
-

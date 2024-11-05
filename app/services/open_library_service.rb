@@ -6,7 +6,7 @@ class OpenLibraryService
 
   def self.fetch_book_details(isbn)
     puts "Fetching book details for ISBN: #{isbn}"
-    isbn = ISBN.thirteen(isbn) #convert to ISBN13 for lookup
+    isbn = ISBN.thirteen(isbn.to_s) #convert to ISBN13 for lookup
     url = URI.parse("#{BASE_URL}#{isbn}.json")
     response = Net::HTTP.get(url)
     data = JSON.parse(response)

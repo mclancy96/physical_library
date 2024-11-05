@@ -44,29 +44,25 @@ class BooksController < ApplicationController
           book.cover_image.attach(io: cover_image_file, filename: "cover_#{isbn}.jpg")
         end
 
-          if book.save
-            genres = book_data[:genres].map do |genre_name|
-              Genre.find_or_create_by(name: genre_name)
-            end
-            book.genres << genres
-            book.authors << authors
-            format.html { redirect_to book_path(book), success: "Successfully added #{book_data[:title]}" }
-            format.json { render json: { success: true, book: book }, status: :created, location: book }
-          else
-            format.html { render new_book_path, error: book.errors.full_messages }
-            format.json { render json: { success: false, errors: book.errors.full_messages }, status: :unprocessable_entity }
+        if book.save
+          genres = book_data[:genres].map do |genre_name|
+            Genre.find_or_create_by(name: genre_name)
           end
-      else
-        respond_to do |format|
-          format.html { render new_book_path, error: 'Book already exists!' }
-          format.json { render json: { success: false, errors: 'Book already exists' }, error: :unprocessable_entity }
+          book.genres << genres
+          book.authors << authors
+          flash[:success] = "Successfully added #{book_data[:title]}"
+          redirect_to book_path(book)
+        else
+          flash[:error] = book.errors.full_messages
+          redirect_to new_book_path
         end
+      else
+        flash[:error] = 'Book already exists'
+        redirect_to new_book_path
       end
     else
-      respond_to do |format|
-        format.html { render new_book_path, error: 'No book found' }
-        format.json { render json: { success: false, errors: 'Book could not be found' }, status: :unprocessable_entity }
-      end
+      flash[:error] = 'No book found'
+      redirect_to new_book_path
     end
   end
 

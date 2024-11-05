@@ -39,9 +39,14 @@ class BooksController < ApplicationController
         )
 
         # Download and attach the cover image
-        if book_data[:cover_image_url]
-          cover_image_file = URI.open(book_data[:cover_image_url])
-          book.cover_image.attach(io: cover_image_file, filename: "cover_#{isbn}.jpg")
+        if book_data[:cover_image_url].present?
+          begin
+            cover_image_file = URI.open(book_data[:cover_image_url])
+            book.cover_image.attach(io: cover_image_file, filename: "cover_#{isbn}.jpg")
+          rescue OpenURI::HTTPError => e
+            Rails.logger.error "Failed to open image URL: #{e.message}"
+            # You might want to handle this error more gracefully in production
+          end
         end
 
         if book.save

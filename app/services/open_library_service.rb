@@ -27,7 +27,7 @@ class OpenLibraryService
         title: book_info.dig('data', 'title'),
         authors:,
         genres:,
-        publication_date: book_info.dig('data', 'publish_date'),
+        publication_year: book_info.dig('data', 'publish_date'),
         isbn10: ISBN.ten(isbn),
         isbn13: isbn,
         cover_image_url: book_info.dig('data', 'cover', 'large'), # Use the large cover image

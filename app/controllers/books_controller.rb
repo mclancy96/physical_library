@@ -33,7 +33,7 @@ class BooksController < ApplicationController
       # Create the book record
       book = Book.new(
         title: book_data[:title],
-        publication_date: book_data[:publication_date],
+        publication_year: book_data[:publication_year],
         isbn10: book_data[:isbn10],
         isbn13: book_data[:isbn13]
       )

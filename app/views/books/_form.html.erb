@@ -11,62 +11,57 @@
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :title, style: "display: block" %>
-    <%= form.text_field :title %>
+  <div class="m-3">
+    <%= form.label :title, style: "display: block", class: 'form-label' %>
+    <%= form.text_field :title, class: 'form-control' %>
   </div>
 
-  <div>
-    <%= form.label :author_id, style: "display: block" %>
-    <%= form.number_field :author_id %>
+  <div class="m-3">
+    <%= form.label :author_id, style: "display: block", class: 'form-label' %>
+    <%= form.number_field :author_id, class: 'form-control' %>
   </div>
 
-  <div>
-    <%= form.label :genre_id, style: "display: block" %>
-    <%= form.number_field :genre_id %>
+  <div class="m-3">
+    <%= form.label :genre_id, style: "display: block", class: 'form-label' %>
+    <%= form.number_field :genre_id, class: 'form-control' %>
   </div>
 
-  <div>
-    <%= form.label :publication_date, style: "display: block" %>
-    <%= form.date_field :publication_date %>
+  <div class="m-3">
+    <%= form.label :publication_year, style: "display: block", class: 'form-label' %>
+    <%= form.number_field :publication_year, class: 'form-control', max: Date.today.year %>
   </div>
 
-  <div>
-    <%= form.label :isbn10, style: "display: block" %>
-    <%= form.text_field :isbn10 %>
+  <div class="m-3">
+    <%= form.label :isbn10, style: "display: block", class: 'form-label' %>
+    <%= form.text_field :isbn10, class: 'form-control' %>
   </div>
 
-  <div>
-    <%= form.label :isbn13, style: "display: block" %>
-    <%= form.text_field :isbn13 %>
+  <div class="m-3">
+    <%= form.label :isbn13, style: "display: block", class: 'form-label' %>
+    <%= form.text_field :isbn13, class: 'form-control' %>
   </div>
 
-  <div>
-    <%= form.label :copies_available, style: "display: block" %>
-    <%= form.number_field :copies_available %>
+  <div class="m-3">
+    <%= form.label :copies_available, style: "display: block", class: 'form-label' %>
+    <%= form.number_field :copies_available, class: 'form-control' %>
   </div>
 
-  <div>
-    <%= form.label :book_type, style: "display: block" %>
-    <%= form.text_field :book_type %>
+  <div class="m-3">
+    <%= form.label :book_type, style: "display: block", class: 'form-label' %>
+    <%= form.text_field :book_type, class: 'form-control' %>
   </div>
 
-  <div class="form-group">
-    <%= form.label :cover_image, "Cover Image" %>
+  <div class="form-group m-3">
+    <%= form.label :cover_image, "Cover Image", class: 'form-label' %>
     <%= form.file_field :cover_image, class: "form-control" %>
   </div>
 
-  <div>
-    <%= form.label :shelf_location, style: "display: block" %>
-    <%= form.text_field :shelf_location %>
+  <div class="m-3">
+    <%= form.label :shelf_location, style: "display: block", class: 'form-label' %>
+    <%= form.text_field :shelf_location, class: 'form-control' %>
   </div>
 
   <div>
-    <%= form.label :status, style: "display: block" %>
-    <%= form.text_field :status %>
-  </div>
-
-  <div>
-    <%= form.submit %>
+    <%= form.submit class: 'btn btn-primary' %>
   </div>
 <% end %>

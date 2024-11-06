@@ -1,0 +1,10 @@
+@import "bootstrap";
+@import 'like';
+@import 'toast';
+
+.thumbnail {
+  max-height: 300px; /* Set max height */
+  max-width: 100%;   /* Constrain width to container */
+  height: auto;      /* Maintain aspect ratio */
+  width: auto;
+}

@@ -9,7 +9,8 @@ Rails.application.routes.draw do
   resources :reservations
   resources :read_statuses
   resources :ratings
-  resources :likes, only: %i[create destroy]
+  resources :likes, only: %i[create]
+  delete 'likes', to: 'likes#destroy'
   resources :borrowings
   resources :members, except: %i[new]
   resources :genres

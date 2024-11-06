@@ -7,7 +7,9 @@
     <% end %>
 
     <div class="card-body">
-      <h5 class="card-title"><strong><%= book.title.titleize %></strong></h5>
+      <h5 class="card-title"><strong><%= book.title.titleize %></strong><button class="like-button" data-book-id="<%= book.id %>">
+        <span class="heart-icon <%= book.liked_by?(current_user) ? 'filled' : 'empty' %>-heart"></span>
+      </button></h5>
       <p class="card-text"><strong>Publication Year:</strong> <%= book.publication_year %></p>
       <p class="card-text"><strong>Genres:</strong>
         <% Genre.joins(:books).select('genres.*, COUNT(books.id)').where("books.id = #{book.id}").group('genres.id').order('COUNT(books.id) DESC, name').join(', ') %>
@@ -17,9 +19,7 @@
       <p class="card-text"><strong>ISBN-10:</strong> <%= book.isbn10 %></p>
       <p class="card-text"><strong>ISBN-13:</strong> <%= book.isbn13 %></p>
       <p class="card-text"><strong>Average Rating:</strong> 5</p>
-      <button class="like-button" data-book-id="<%= book.id %>">
-        <i class="heart-icon fas <%= book.liked_by?(current_user) ? 'fa-heart' : 'fa-heart-o' %>"></i>
-      </button>
+
     </div>
   </div>
 </div>

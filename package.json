@@ -10,12 +10,10 @@
     "bootstrap": "^5.3.3",
     "html5-qrcode": "^2.3.8",
     "jquery": "^3.7.1",
-    "sass": "^1.80.6"
+    "sass": "^1.80.6",
+    "esbuild": "^0.24.0"
   },
   "scripts": {
     "build": "esbuild app/javascript/*.* --bundle --sourcemap --format=esm --outdir=app/assets/builds --public-path=/assets"
-  },
-  "devDependencies": {
-    "esbuild": "^0.24.0"
   }
 }

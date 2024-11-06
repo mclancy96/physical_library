@@ -1,24 +1,31 @@
-<% if @book.cover_image.present? %>
-  <%= link_to image_tag(@book.cover_image.variant(resize_to_limit: [300, 300]), class: 'card-img-top img-thumbnail img-responsive thumbnail', alt: "#{@book.title} cover image", height: 300), book_path(@book) %>
-<% else %>
-  <%=link_to image_tag("placeholder-image.png", class: 'card-img-top img-fluid thumbnail', alt: "Placeholder cover image"), book_path(@book) %>
-<% end %>
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-4">
+      <div class="card h-100">
+        <% if @book.cover_image.present? %>
+          <%= image_tag @book.cover_image.variant(resize_to_limit: [300, 300]),
+                        class: 'card-img-top img-thumbnail img-responsive',
+                        alt: "#{@book.title} cover image", height: 300 %>
+        <% else %>
+          <%= image_tag "placeholder-image.png", class: 'card-img-top img-fluid thumbnail', alt: "Placeholder cover image" %>
+        <% end %>
+        <button class="like-button m-2" data-book-id="<%= @book.id %>">
+          <span class="heart-icon <%= @book.liked_by?(current_user) ? 'filled' : 'empty' %>-heart"></span>
+        </button>
+      </div>
+    </div>
 
-<h1><i><%= @book.title.titleize %></i></h1>
-<p><strong>Author(s):</strong>
-  <%@book.authors.each do |author| %>
-    <%= link_to "#{author.name} ", author_path(author) %>
-  <% end %>
-  </p>
-<p><strong>Genre(s):</strong>
-  <%@book.genres.each do |genre| %>
-    <%= link_to "#{genre.name}", genre_path(genre)  %>
-  <% end %>
-</p>
-
-<p><strong>Page Count:</strong> <%=@book.page_count %></p>
-<p><strong>Publication Year:</strong> <%=@book.publication_year %></p>
-<p><strong>ISBN-10:</strong> <%=@book.isbn10 %></p>
-<p><strong>ISBN-13:</strong> <%=@book.isbn13 %></p>
+    <div class="col-md-8">
+      <h1 class="display-4"><%= @book.title.titleize %></h1>
+      <p><strong>Publication Year:</strong> <%= @book.publication_year %></p>
+      <p><strong>Genres:</strong> <%= @book.genres.order(:name).pluck(:name).join(', ') %></p>
+      <p><strong>Authors:</strong> <%= @book.authors.pluck(:name).join(', ') %></p>
+      <p><strong>Page Count:</strong> <%= @book.page_count %></p>
+      <p><strong>ISBN-10:</strong> <%= @book.isbn10 %></p>
+      <p><strong>ISBN-13:</strong> <%= @book.isbn13 %></p>
+      <p><strong>Average Rating:</strong> <%= @book.average_rating ||= "Not Rated" %></p>
+    </div>
+  </div>
+</div>
 
 <%= link_to "<- Back to Book Index", books_path %>

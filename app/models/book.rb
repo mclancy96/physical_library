@@ -2,19 +2,19 @@
 class Book < ApplicationRecord
   include Rails.application.routes.url_helpers
 
-  has_many :author_books
+  has_many :author_books, dependent: :destroy
   has_many :authors, through: :author_books, source: :author
-  has_many :book_genres
+  has_many :book_genres, dependent: :destroy
   has_many :genres, through: :book_genres
-  has_many :wishlist_books
+  has_many :wishlist_books, dependent: :destroy
   has_many :wishlists, through: :wishlist_books
-  has_many :likes
+  has_many :likes, dependent: :destroy
   has_many :liked_by_members, through: :likes, source: :member
-  has_many :ratings
+  has_many :ratings, dependent: :destroy
   has_many :rated_by_members, through: :ratings, source: :member
-  has_many :book_series
+  has_many :book_series, dependent: :destroy
   has_many :series, through: :book_series
-  has_one_attached :cover_image
+  has_one_attached :cover_image, dependent: :destroy
 
   validates :isbn10, uniqueness: true, allow_blank: true, presence: true
   validates :isbn13, uniqueness: true, allow_blank: false, presence: true

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_11_04_003417) do
+ActiveRecord::Schema[7.1].define(version: 2024_11_07_024152) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -230,25 +230,27 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_04_003417) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "author_books", "authors"
-  add_foreign_key "author_books", "books"
+  add_foreign_key "author_books", "books", on_delete: :cascade
   add_foreign_key "book_copies", "books"
-  add_foreign_key "book_genres", "books"
+  add_foreign_key "book_genres", "books", on_delete: :cascade
   add_foreign_key "book_genres", "genres"
-  add_foreign_key "book_series", "books"
+  add_foreign_key "book_series", "books", on_delete: :cascade
   add_foreign_key "book_series", "series"
-  add_foreign_key "borrowings", "books"
+  add_foreign_key "borrowings", "books", on_delete: :cascade
   add_foreign_key "borrowings", "members"
-  add_foreign_key "likes", "books"
+  add_foreign_key "likes", "books", on_delete: :cascade
   add_foreign_key "likes", "members"
   add_foreign_key "notifications", "members"
-  add_foreign_key "ratings", "books"
+  add_foreign_key "ratings", "books", on_delete: :cascade
   add_foreign_key "ratings", "members"
-  add_foreign_key "read_statuses", "books"
+  add_foreign_key "read_statuses", "books", on_delete: :cascade
   add_foreign_key "read_statuses", "members"
-  add_foreign_key "reservations", "books"
+  add_foreign_key "reservations", "books", on_delete: :cascade
   add_foreign_key "reservations", "members"
-  add_foreign_key "reviews", "books"
+  add_foreign_key "reviews", "books", on_delete: :cascade
   add_foreign_key "reviews", "members"
+  add_foreign_key "wishlist_books", "books", on_delete: :cascade
+  add_foreign_key "wishlist_books", "wishlists", on_delete: :cascade
   add_foreign_key "wishlists", "books"
   add_foreign_key "wishlists", "members"
 end

@@ -1,7 +1,7 @@
 <div class="container mt-5">
   <div class="row">
     <div class="col-md-4">
-      <div class="card h-100">
+      <div class="card h-100 image-overlay">
         <% if @book.cover_image.present? %>
           <%= image_tag @book.cover_image.variant(resize_to_limit: [300, 300]),
                         class: 'card-img-top img-thumbnail img-responsive',
@@ -9,21 +9,26 @@
         <% else %>
           <%= image_tag "placeholder-image.png", class: 'card-img-top img-fluid thumbnail', alt: "Placeholder cover image" %>
         <% end %>
-        <button class="like-button m-2" data-book-id="<%= @book.id %>">
-          <span class="heart-icon <%= @book.liked_by?(current_user) ? 'filled' : 'empty' %>-heart"></span>
+        <button class="like-button pt-2 pr-2"  data-book-id="<%= @book.id %>">
+          <span class="heart-icon  <%= @book.liked_by?(current_user) ? 'filled' : 'empty' %>-heart"></span>
         </button>
       </div>
     </div>
 
-    <div class="col-md-8">
+    <div class="col-md-8 text-start">
       <h1 class="display-4"><%= @book.title.titleize %></h1>
       <p><strong>Publication Year:</strong> <%= @book.publication_year %></p>
-      <p><strong>Genres:</strong> <%= @book.genres.order(:name).pluck(:name).join(', ') %></p>
+      <p><strong>Genres:</strong> <%= @book.genres.map { |genre|
+        @genres.sort_by(&:book_count).reverse.find { |g| g.id == genre.id }&.name
+      }.compact.join(", ") %></p>
       <p><strong>Authors:</strong> <%= @book.authors.pluck(:name).join(', ') %></p>
       <p><strong>Page Count:</strong> <%= @book.page_count %></p>
       <p><strong>ISBN-10:</strong> <%= @book.isbn10 %></p>
       <p><strong>ISBN-13:</strong> <%= @book.isbn13 %></p>
-      <p><strong>Average Rating:</strong> <%= @book.average_rating ||= "Not Rated" %></p>
+      <p><strong>Average Rating:</strong> <%= @book.average_rating.to_s ||= "Not Rated" %></p>
+      <%= link_to 'Edit', edit_book_path(@book), class: 'btn btn-primary btn-sm' %>
+      <%= link_to 'Delete', book_path(@book), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger btn-sm' %>
+
     </div>
   </div>
 </div>

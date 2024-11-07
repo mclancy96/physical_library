@@ -14,7 +14,9 @@
       <h5 class="card-title"><strong><%= link_to book.title.titleize, book_path(book) %></strong></h5>
       <p class="card-text"><strong>Publication Year:</strong> <%= book.publication_year %></p>
       <p class="card-text"><strong>Genres:</strong>
-        <% Genre.joins(:books).select('genres.*, COUNT(books.id)').where("books.id = #{book.id}").group('genres.id').order('COUNT(books.id) DESC, name').join(', ') %>
+        <%= book.genres.map { |genre|
+          @genres.sort_by(&:book_count).reverse.find { |g| g.id == genre.id }&.name
+        }.compact.first(5).join(", ") %>
       </p>
       <p class="card-text"><strong>Authors:</strong> <%= book.authors.pluck(:name).join(', ') %></p>
       <p class="card-text"><strong>Page Count:</strong> <%= book.page_count %></p>

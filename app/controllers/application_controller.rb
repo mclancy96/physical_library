@@ -45,7 +45,7 @@ class ApplicationController < ActionController::Base
 
   def catch_not_found
     yield
-  rescue StandardError => e
+  rescue => e
     redirect_to root_path, flash[:error] = "An error occurred while processing your request #{e.message}"
   end
 end

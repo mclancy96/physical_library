@@ -34,4 +34,8 @@ class Book < ApplicationRecord
     Like.where(book_id: id, member_id: current_member.id).exists?
   end
 
+  def average_rating
+    Rating.where(book_id: id).average(:rating)
+  end
+
 end

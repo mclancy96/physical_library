@@ -7,11 +7,15 @@ class BooksController < ApplicationController
 
   # GET /books or /books.json
   def index
-    @books = Book.all
+    @books = Book.includes(:genres)
+    @genres = rank_genres
+
   end
 
   # GET /books/1 or /books/1.json
-  def show; end
+  def show
+    @genres = rank_genres
+  end
 
   # GET /books/new
   def new
@@ -128,11 +132,19 @@ class BooksController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_book
-    @book = Book.find(params[:id])
+    @book = Book.includes(:genres).find(params[:id])
   end
 
   # Only allow a list of trusted parameters through.
   def book_params
     params.require(:book).permit(:title, :author_id, :genre_id, :publication_date, :isbn10, :isbn13, :cover_image)
+  end
+
+  def rank_genres
+    Genre.joins(:books)
+         .select('genres.*, COUNT(books.id) AS book_count')
+         .group('genres.id')
+         .order('book_count DESC')
+         .to_a
   end
 end

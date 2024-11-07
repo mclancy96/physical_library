@@ -31,7 +31,7 @@ if (scanButton) {
 
         html5QrCode.start(
             {facingMode: "environment"},
-            {fps: 10, qrbox: 250},
+            {fps: 10, qrbox: 400},
             qrCodeSuccessCallback,
             qrCodeErrorCallback
         ).catch(error => {

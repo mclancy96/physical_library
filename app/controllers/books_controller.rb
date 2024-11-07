@@ -26,7 +26,7 @@ class BooksController < ApplicationController
     isbn = params[:isbn]
     book_data = OpenLibraryService.fetch_book_details(isbn.to_s)
 
-    if book_data
+    if book_data && book_data[:isbn]
       # Create or find the authors
       authors = book_data[:authors].map do |author|
         Author.find_or_create_by(name: author)

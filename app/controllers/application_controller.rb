@@ -3,7 +3,6 @@
 class ApplicationController < ActionController::Base
   include ApplicationHelper
   before_action :authenticate
-  around_action :catch_not_found
 
   def home
     @recent_likes = Like.order(created_at: :desc).limit(5)
@@ -13,7 +12,7 @@ class ApplicationController < ActionController::Base
   end
 
   def toast
-    flash[:info] = "This is a test toast"
+    flash[:info] = 'This is a test toast'
     redirect_to root_path
   end
 
@@ -41,11 +40,17 @@ class ApplicationController < ActionController::Base
     redirect_to login_path
   end
 
+  rescue_from ActiveRecord::RecordNotFound, with: :render_not_found
+  rescue_from ActionController::RoutingError, with: :render_not_found
+  rescue_from Exception, with: :render_internal_error
+
   private
 
-  def catch_not_found
-    yield
-  rescue => e
-    redirect_to root_path, flash[:error] = "An error occurred while processing your request #{e.message}"
+  def render_not_found
+    redirect_to errors_not_found_path
+  end
+
+  def render_internal_error
+    redirect_to errors_internal_error_path
   end
 end

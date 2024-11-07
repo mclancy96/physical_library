@@ -1,7 +1,7 @@
 <%= form_with(model: borrowing) do |form| %>
   <% if borrowing.errors.any? %>
     <div style="color: red">
-      <h2><%= pluralize(borrowing.errors.count, "error") %> prohibited this borrowing from being saved:</h2>
+      <h2><%= pluralize(borrowing.errors.count, "errors") %> prohibited this borrowing from being saved:</h2>
 
       <ul>
         <% borrowing.errors.each do |error| %>

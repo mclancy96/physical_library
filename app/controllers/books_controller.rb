@@ -49,7 +49,7 @@ class BooksController < ApplicationController
             book.cover_image.attach(io: cover_image_file, filename: "cover_#{isbn}.jpg")
           rescue OpenURI::HTTPError => e
             Rails.logger.error "Failed to open image URL: #{e.message}"
-            # You might want to handle this error more gracefully in production
+            # You might want to handle this errors more gracefully in production
           end
         end
 
@@ -121,8 +121,8 @@ class BooksController < ApplicationController
     service = OpenLibraryService.new(@isbn)
     @book_data = service.fetch_book_data
 
-    if @book_data['error']
-      render json: { error: @book_data['error'] }, status: :not_found
+    if @book_data['errors']
+      render json: { error: @book_data['errors'] }, status: :not_found
     else
       render json: @book_data
     end

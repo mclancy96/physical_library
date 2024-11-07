@@ -46,7 +46,7 @@ class OpenLibraryService
       }
     rescue
       if StandardError
-        Rails.logger.error('OpenLibraryService error:')
+        Rails.logger.error('OpenLibraryService errors:')
       elsif InvalidISBNError
         Rails.logger.error('The isbn provided is invalid')
       end

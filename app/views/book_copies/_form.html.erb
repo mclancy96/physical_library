@@ -1,7 +1,7 @@
 <%= form_with(model: book_copy) do |form| %>
   <% if book_copy.errors.any? %>
     <div style="color: red">
-      <h2><%= pluralize(book_copy.errors.count, "error") %> prohibited this book_copy from being saved:</h2>
+      <h2><%= pluralize(book_copy.errors.count, "errors") %> prohibited this book_copy from being saved:</h2>
 
       <ul>
         <% book_copy.errors.each do |error| %>

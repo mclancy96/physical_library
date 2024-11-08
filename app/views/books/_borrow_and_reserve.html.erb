@@ -1,6 +1,6 @@
 <div class="btn-group" role="group" aria-label="Action Buttons">
   <% if book.borrowed? && book.borrowers.include?(current_user) %>
-    <%= button_to "Return Book", borrowing_path(book.borrowings.where(member_id: current_user.id).first), method: :delete, class: "btn btn-danger" %>
+    <%= button_to "Return Book", borrowing_path(book.borrowings.where(member_id: current_user.id).first), method: :delete, class: "btn btn-outline-danger" %>
   <% elsif book.borrowed? %>
     <form><button class='btn btn-outline-primary' disabled>Borrow Book</button></form>
   <% else %>
@@ -8,7 +8,7 @@
   <% end %>
 
   <% if book.reserved? && book.reservation.member == current_user %>
-    <%= button_to "Cancel Reservation", reservation_path(book.reservation), method: :delete, class: "btn btn-danger" %>
+    <%= button_to "Cancel Reservation", reservation_path(book.reservation), method: :delete, class: "btn btn-outline-danger" %>
   <% elsif book.reserved? %>
     <form><button class='btn btn-outline-primary' disabled>Reserve Book</button></form>
   <% else %>

@@ -48,5 +48,9 @@ class Book < ApplicationRecord
   def borrowed?
     Borrowing.where(book_id: id).exists?
   end
+  
+  def borrowers
+    Borrowing.where(book_id: id).map { |n| Member.find(n.member_id) }
+  end
 
 end

@@ -19,7 +19,6 @@
           <span class="heart-icon  <%= @book.liked_by?(current_user) ? 'filled' : 'empty' %>-heart"></span>
         </button>
       </div>
-      <%= render 'books/borrow_and_reserve', book: @book %>
     </div>
 
     <div class="col-md-8 text-start">
@@ -61,6 +60,7 @@
 
 <div class="container mt-5">
   <h2>Borrow and Return Status</h2>
+  <%= render 'books/borrow_and_reserve', book: @book %>
   <% if @book.borrowed? %>
     <p>Currently borrowed by: <%=@book.borrowers.pluck(:name).join(', ')  %></p>
   <% end %>

@@ -15,6 +15,9 @@ class Book < ApplicationRecord
   has_many :book_series, dependent: :destroy
   has_many :series, through: :book_series
   has_one_attached :cover_image, dependent: :destroy
+  has_one :reservation
+  has_many :borrowings
+  has_many :borrowers, through: :borrowings, source: :borrower
 
   validates :isbn10, uniqueness: true, allow_blank: true, presence: true
   validates :isbn13, uniqueness: true, allow_blank: false, presence: true
@@ -36,6 +39,14 @@ class Book < ApplicationRecord
 
   def average_rating
     Rating.where(book_id: id).average(:rating)
+  end
+
+  def reserved?
+    Reservation.where(book_id: id).exists?
+  end
+
+  def borrowed?
+    Borrowing.where(book_id: id).exists?
   end
 
 end

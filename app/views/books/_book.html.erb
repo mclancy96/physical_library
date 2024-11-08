@@ -1,29 +1,35 @@
 <div class="col-lg-4 col-md-6 mb-4">
   <div class="card h-100">
     <div class="image-overlay">
-    <% if book.cover_image.present? %>
-      <%= link_to image_tag(book.cover_image.variant(resize_to_limit: [300, 300]), class: 'card-img-top img-thumbnail img-responsive thumbnail', alt: "#{book.title} cover image", height: 300), book_path(book) %>
-    <% else %>
-      <%=link_to image_tag("placeholder-image.png", class: 'card-img-top img-fluid thumbnail', alt: "Placeholder cover image"), book_path(book) %>
-    <% end %>
+      <% if book.cover_image.present? %>
+        <%= link_to image_tag(book.cover_image.variant(resize_to_limit: [300, 300]), class: 'card-img-top img-thumbnail img-responsive thumbnail', alt: "#{book.title} cover image", height: 300), book_path(book) %>
+      <% else %>
+        <%= link_to image_tag("placeholder-image.png", class: 'card-img-top img-fluid thumbnail', alt: "Placeholder cover image"), book_path(book) %>
+      <% end %>
       <button class="like-button m-2" data-book-id="<%= book.id %>">
         <span class="heart-icon <%= book.liked_by?(current_user) ? 'filled' : 'empty' %>-heart"></span>
       </button>
-  </div>
-    <div class="card-body">
-      <h5 class="card-title"><strong><%= link_to book.title.titleize, book_path(book) %></strong></h5>
-      <p class="card-text"><strong>Publication Year:</strong> <%= book.publication_year %></p>
-      <p class="card-text"><strong>Genres:</strong>
-        <%= book.genres.map { |genre|
-          @genres.sort_by(&:book_count).reverse.find { |g| g.id == genre.id }&.name
-        }.compact.first(5).join(", ") %>
-      </p>
-      <p class="card-text"><strong>Authors:</strong> <%= book.authors.pluck(:name).join(', ') %></p>
-      <p class="card-text"><strong>Page Count:</strong> <%= book.page_count %></p>
-      <p class="card-text"><strong>ISBN-10:</strong> <%= book.isbn10 %></p>
-      <p class="card-text"><strong>ISBN-13:</strong> <%= book.isbn13 %></p>
-      <p class="card-text"><strong>Average Rating:</strong> 5</p>
-
+    </div>
+    <div class="card-body text-start">
+      <h5 class="card-title text-center"><strong><%= link_to book.title.titleize, book_path(book) %></strong></h5>
+      <div class="mx-5">
+        <span class="card-text"><strong>Publication Year:</strong> <%= book.publication_year %></span><br>
+        <span class="card-text"><strong>Genres:</strong>
+          <%= book.genres.map { |genre|
+            @genres.sort_by(&:book_count).reverse.find { |g| g.id == genre.id }&.name
+          }.compact.first(5).join(", ") %>
+      </span><br>
+        <span class="card-text"><strong>Authors:</strong> <%= book.authors.pluck(:name).join(', ') %></span><br>
+        <span class="card-text"><strong>Page Count:</strong> <%= book.page_count %></span><br>
+        <span class="card-text"><strong>Shelf Location:</strong> <%= book.shelf_location %></span><br>
+        <span class="card-text"><strong>ISBN-10:</strong> <%= book.isbn10 %></span><br>
+        <span class="card-text"><strong>ISBN-13:</strong> <%= book.isbn13 %></span><br>
+        <span class="card-text"><strong>Average Rating:</strong> 5</span><br>
+        <hr>
+      </div>
+    </div>
+    <div class="card-footer text-body-secondary text-center">
+      <%= render 'books/borrow_and_reserve', book: book%>
     </div>
   </div>
 </div>

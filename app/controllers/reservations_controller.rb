@@ -22,24 +22,19 @@ class ReservationsController < ApplicationController
 
   # POST /reservations or /reservations.json
   def create
-    @reservation = Reservation.new(reservation_params)
-
-    respond_to do |format|
-      if @reservation.save
-        format.html { redirect_to @reservation, notice: "Reservation was successfully created." }
-        format.json { render :show, status: :created, location: @reservation }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @reservation.errors, status: :unprocessable_entity }
-      end
-    end
+    Reservation.create!(book_id: params[:book_id],
+                        member_id: params[:member_id],
+                        reservation_date: DateTime.current,
+                        expiration_date: DateTime.current + 30.days,
+                        status: 1)
+    redirect_to books_path, notice: 'Book reserved successfully.'
   end
 
   # PATCH/PUT /reservations/1 or /reservations/1.json
   def update
     respond_to do |format|
       if @reservation.update(reservation_params)
-        format.html { redirect_to @reservation, notice: "Reservation was successfully updated." }
+        format.html { redirect_to @reservation, notice: 'Reservation was successfully updated.' }
         format.json { render :show, status: :ok, location: @reservation }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -50,22 +45,19 @@ class ReservationsController < ApplicationController
 
   # DELETE /reservations/1 or /reservations/1.json
   def destroy
-    @reservation.destroy!
-
-    respond_to do |format|
-      format.html { redirect_to reservations_path, status: :see_other, notice: "Reservation was successfully destroyed." }
-      format.json { head :no_content }
-    end
+    @reservation.destroy unless @reservation.member != current_user
+    redirect_to books_path, notice: 'Reservation canceled.'
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_reservation
-      @reservation = Reservation.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def reservation_params
-      params.require(:reservation).permit(:book_id, :member_id, :reservation_date, :expiration_date, :status)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_reservation
+    @reservation = Reservation.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def reservation_params
+    params.require(:reservation).permit(:book_id, :member_id, :reservation_date, :expiration_date, :status)
+  end
 end

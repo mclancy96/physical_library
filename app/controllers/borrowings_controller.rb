@@ -1,6 +1,6 @@
 class BorrowingsController < ApplicationController
   before_action :authenticate
-  before_action :set_borrowing, only: %i[ show edit update destroy ]
+  before_action :set_borrowing, only: %i[ new show edit update destroy ]
 
   # GET /borrowings or /borrowings.json
   def index
@@ -8,8 +8,7 @@ class BorrowingsController < ApplicationController
   end
 
   # GET /borrowings/1 or /borrowings/1.json
-  def show
-  end
+  def show; end
 
   # GET /borrowings/new
   def new
@@ -17,28 +16,26 @@ class BorrowingsController < ApplicationController
   end
 
   # GET /borrowings/1/edit
-  def edit
-  end
+  def edit; end
 
   # POST /borrowings or /borrowings.json
   def create
-    @borrowing = Borrowing.new(borrowing_params)
+    Borrowing.create!(
+      member_id: params[:member_id],
+      book_id: params[:book_id],
+      borrow_date: params[:borrow_date] ||= DateTime.current.to_date,
+      due_date: params[:due_date] ||= (DateTime.current + 30.day).to_date,
+      return_date: params[:return_date] ||= nil,
+      status: params[:status] ||= nil
+    )
+    redirect_to books_path, notice: 'Book borrowed successfully.'
 
-    respond_to do |format|
-      if @borrowing.save
-        format.html { redirect_to @borrowing, notice: "Borrowing was successfully created." }
-        format.json { render :show, status: :created, location: @borrowing }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @borrowing.errors, status: :unprocessable_entity }
-      end
-    end
   end
 
   # PATCH/PUT /borrowings/1 or /borrowings/1.json
   def update
     respond_to do |format|
-      if @borrowing.update(borrowing_params)
+      if @borrowing.update(params)
         format.html { redirect_to @borrowing, notice: "Borrowing was successfully updated." }
         format.json { render :show, status: :ok, location: @borrowing }
       else
@@ -50,22 +47,20 @@ class BorrowingsController < ApplicationController
 
   # DELETE /borrowings/1 or /borrowings/1.json
   def destroy
-    @borrowing.destroy!
+    @borrowing.destroy unless @borrowing.borrower != current_user
 
-    respond_to do |format|
-      format.html { redirect_to borrowings_path, status: :see_other, notice: "Borrowing was successfully destroyed." }
-      format.json { head :no_content }
-    end
+    redirect_to books_path, notice: 'Book returned successfully.'
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_borrowing
-      @borrowing = Borrowing.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def borrowing_params
-      params.require(:borrowing).permit(:book_id, :member_id, :borrow_date, :due_date, :return_date, :status)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_borrowing
+    @borrowing = Borrowing.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def borrowing_params
+    params.require(:borrowing).permit(:book_id, :member_id, :borrow_date, :due_date, :return_date, :status)
+  end
 end

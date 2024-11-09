@@ -26,4 +26,12 @@ class Member < ApplicationRecord
                                     length: { minimum: 6 }
 
   has_secure_password
+
+  def reservation_count
+    reservations.where(member_id: id).count
+  end
+
+  def borrow_count
+    borrowings.where(member_id: id).count
+  end
 end

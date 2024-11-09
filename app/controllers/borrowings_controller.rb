@@ -20,16 +20,19 @@ class BorrowingsController < ApplicationController
 
   # POST /borrowings or /borrowings.json
   def create
-    Borrowing.create!(
-      member_id: params[:member_id],
-      book_id: params[:book_id],
-      borrow_date: params[:borrow_date] ||= DateTime.current.to_date,
-      due_date: params[:due_date] ||= (DateTime.current + 30.day).to_date,
-      return_date: params[:return_date] ||= nil,
-      status: params[:status] ||= nil
-    )
-    redirect_to books_path, notice: 'Book borrowed successfully.'
-
+    if current_user.borrow_count >= 5
+      redirect_to books_path, error: 'You already have 5 borrowed books! You cannot borrow any more books'
+    else
+      Borrowing.create!(
+        member_id: params[:member_id],
+        book_id: params[:book_id],
+        borrow_date: params[:borrow_date] ||= DateTime.current.to_date,
+        due_date: params[:due_date] ||= (DateTime.current + 30.day).to_date,
+        return_date: params[:return_date] ||= nil,
+        status: params[:status] ||= nil
+      )
+      redirect_to books_path, notice: 'Book borrowed successfully.'
+    end
   end
 
   # PATCH/PUT /borrowings/1 or /borrowings/1.json

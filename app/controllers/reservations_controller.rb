@@ -22,12 +22,16 @@ class ReservationsController < ApplicationController
 
   # POST /reservations or /reservations.json
   def create
-    Reservation.create!(book_id: params[:book_id],
-                        member_id: params[:member_id],
-                        reservation_date: DateTime.current,
-                        expiration_date: DateTime.current + 30.days,
-                        status: 1)
-    redirect_to books_path, notice: 'Book reserved successfully.'
+    if current_user.reservation_count >= 5
+      redirect_to books_path, error: 'You already have 5 reservations! You cannot reserve any more books'
+    else
+      Reservation.create!(book_id: params[:book_id],
+                          member_id: params[:member_id],
+                          reservation_date: DateTime.current,
+                          expiration_date: DateTime.current + 30.days,
+                          status: 1)
+      redirect_to books_path, notice: 'Book reserved successfully.'
+    end
   end
 
   # PATCH/PUT /reservations/1 or /reservations/1.json

@@ -1,10 +1,67 @@
-<p style="color: green"><%= notice %></p>
-
-<%= render @member %>
-
-<div>
-  <%= link_to "Edit this member", edit_member_path(@member) %> |
-  <%= link_to "Back to members", members_path %>
-
-  <%= button_to "Destroy this member", @member, method: :delete %>
+<div class="container">
+  <%= link_to "Back to Members", members_path, class: 'btn btn-outline-primary' %>
+  <h1><%= @member.name %></h1>
+  <p><strong>Email</strong> <%= @member.email %></p>
+  <p><strong>Join Date</strong> <%= @member.join_date %></p>
+  <div class="btn-group" role="group" aria-label="Basic example">
+    <%= button_to("Edit Member", member_path(@member), class: "btn btn-primary mx-2", type: 'button') if (current_user.role == :admin or current_user == @member) %>
+    <%= button_to("Delete Member", member_path(@member), class: "btn btn-danger mx-2", type: 'button') if (current_user.role == :admin or current_user == @member) %>
+  </div>
+  <hr>
+  <div class="container text-start">
+    <div class="row align-items-start">
+      <div class="col-md-6 col-12-sm">
+        <h2>Borrowed Books</h2>
+        <table class="table table-responsive table-bordered m-2">
+          <thead>
+          <tr>
+            <th scope="col">Title</th>
+            <th scope="col">Author</th>
+            <th scope="col">Borrowed On</th>
+            <th scope="col">Due Date</th>
+          </tr>
+          </thead>
+          <tbody>
+          <% @member.borrowings.each do |borrowing| %>
+            <%= render 'books/book_row', book: borrowing.book, date1: borrowing.borrow_date, date2: borrowing.due_date  %>
+          <% end %>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-md-6 col-12-sm">
+        <h2>Reserved Books</h2>
+        <table class="table table-responsive table-bordered m-2">
+          <thead>
+          <tr>
+            <th scope="col">Title</th>
+            <th scope="col">Author</th>
+            <th scope="col">Reservation Date</th>
+            <th scope="col">Expiration Date</th>
+          </tr>
+          </thead>
+          <tbody>
+          <% @member.reservations.each do |reservation| %>
+            <%= render 'books/book_row', book: reservation.book, date1: reservation.reservation_date, date2: reservation.expiration_date  %>
+          <% end %>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-md-6 col-12-sm">
+        <h2>Liked Books</h2>
+        <table class="table table-responsive table-bordered m-2">
+          <thead>
+          <tr>
+            <th scope="col">Title</th>
+            <th scope="col">Author</th>
+          </tr>
+          </thead>
+          <tbody>
+          <% @member.likes.each do |like| %>
+            <%= render 'books/book_row', book: like.book, date1: nil, date2: nil  %>
+          <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </div>

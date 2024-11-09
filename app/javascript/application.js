@@ -6,4 +6,7 @@ import "bootstrap"
 
 // Initialize Rails UJS and ActiveStorage
 ActiveStorage.start()
+document.addEventListener("DOMContentLoaded", function() {
+    document.querySelectorAll('[data-bs-toggle="popover"]').forEach(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
+});
 

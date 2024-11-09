@@ -31,7 +31,11 @@ class Member < ApplicationRecord
     reservations.where(member_id: id).count
   end
 
-  def borrow_count
+  def borrowing_count
     borrowings.where(member_id: id).count
+  end
+
+  def like_count
+    likes.where(member_id: id).count
   end
 end

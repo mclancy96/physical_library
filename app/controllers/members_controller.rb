@@ -13,11 +13,14 @@ class MembersController < ApplicationController
 
   # GET /members/new
   def new
+    @page_title = 'New Member'
     @member = Member.new
   end
 
   # GET /members/1/edit
-  def edit; end
+  def edit
+    @page_title = "Editing #{@member.name}"
+  end
 
   # POST /members or /members.json
   def create

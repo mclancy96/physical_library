@@ -1,17 +1,9 @@
-<div id="<%= dom_id member %>">
-  <p>
-    <strong>Name:</strong>
-    <%= member.name %>
-  </p>
+<tr>
+  <th scope="row"><%= member.id %></th>
+  <td><%= link_to member.name, member_path(member) %></td>
+  <td><%= member.email %></td>
+  <td><%= member.reservation_count %></td>
+  <td><%= member.borrowing_count %></td>
+  <td><%= member.like_count %></td>
+</tr>
 
-  <p>
-    <strong>Email:</strong>
-    <%= member.email %>
-  </p>
-
-  <p>
-    <strong>Join date:</strong>
-    <%= member.join_date %>
-  </p>
-
-</div>

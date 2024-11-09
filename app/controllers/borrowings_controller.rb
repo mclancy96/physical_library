@@ -1,6 +1,6 @@
 class BorrowingsController < ApplicationController
   before_action :authenticate
-  before_action :set_borrowing, only: %i[ new show edit update destroy ]
+  before_action :set_borrowing, only: %i[new show edit update destroy]
 
   # GET /borrowings or /borrowings.json
   def index

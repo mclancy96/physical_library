@@ -30,15 +30,20 @@ class BooksController < ApplicationController
       begin
         ActiveRecord::Base.transaction do
           # Create or find the authors and genres
-          authors = book_data[:authors].map(&:downcase).uniq.map do |author_name|
-            Author.find_or_create_by("LOWER(name) = '#{author_name.downcase}'") do |author|
-              author.name = author_name.capitalize
-            end
+
+          authors = book_data[:authors].uniq.map do |author_name|
+            author_name_downcase = author_name.downcase
+            author = Author.where('LOWER(name) = ?', author_name_downcase).first_or_initialize
+            author.name = author_name.capitalize if author.new_record?
+            author.save
+            author
           end
-          genres = book_data[:genres].map(&:downcase).uniq.map do |genre_name|
-            Genre.find_or_create_by("LOWER(name) = '#{genre_name.downcase}'") do |genre|
-              genre.name = genre_name.capitalize
-            end
+          genres = book_data[:genres].uniq.map do |genre_name|
+            genre_name_downcase = genre_name.downcase
+            genre = Genre.where('LOWER(name) = ?', genre_name_downcase).first_or_initialize
+            genre.name = genre_name.capitalize if genre.new_record?
+            genre.save
+            genre
           end
 
           if Book.where(isbn13: book_data[:isbn13]).count.zero?

@@ -2,7 +2,7 @@
   <div class="card h-100">
     <div class="image-overlay">
       <% if book.cover_image.present? %>
-        <%= link_to image_tag(book.cover_image.variant(resize_to_limit: [300, 300]), class: 'card-img-top img-thumbnail img-responsive thumbnail', alt: "#{book.title} cover image", height: 300), book_path(book) %>
+        <%= link_to image_tag(book.cover_image.variant(resize_to_limit: [600, 600]), class: 'card-img-top img-thumbnail thumbnail', alt: "#{book.title} cover image"), book_path(book) %>
       <% else %>
         <%= link_to image_tag("placeholder-image.png", class: 'card-img-top img-fluid thumbnail', alt: "Placeholder cover image"), book_path(book) %>
       <% end %>

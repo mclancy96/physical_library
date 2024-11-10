@@ -4,9 +4,9 @@
     manually</p>
 
   <h2 class="m5">Scan Book Barcode</h2>
-  <div class="mb-3">
+  <div class="mb-3 text-center">
     <button id="scan-barcode-btn" class="btn btn-primary">Scan Book Barcode</button>
-    <div id="reader" style="display: none;"></div>
+    <div id="reader" style="display: none; max-width:400px;"></div>
     <%= form_with url: books_scan_path, id: 'book-scan' do |form| %>
       <div class="m-3 text-center">
         <p><strong>Status:</strong> <span id="book-info">Click the button above to begin scanning.</span></p>

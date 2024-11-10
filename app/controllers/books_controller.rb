@@ -1,6 +1,5 @@
 class BooksController < ApplicationController
   require 'open-uri'
-
   before_action :authenticate
   before_action :set_book, only: %i[show edit update destroy]
   protect_from_forgery with: :null_session, only: :scan
@@ -28,45 +27,51 @@ class BooksController < ApplicationController
     puts "receive book data: #{book_data}"
 
     if book_data && book_data[:isbn13]
-      # Create or find the authors and genres
-      authors = book_data[:authors].map do |author|
-        Author.find_or_create_by(name: author)
-      end
-      genres = book_data[:genres].map do |genre_name|
-        Genre.find_or_create_by(name: genre_name)
-      end
+      begin
+        ActiveRecord::Base.transaction do
+          # Create or find the authors and genres
+          authors = book_data[:authors].map(&:downcase).uniq.map do |author_name|
+            Author.find_or_create_by("LOWER(name) = '#{author_name.downcase}'") do |author|
+              author.name = author_name.capitalize
+            end
+          end
+          genres = book_data[:genres].map(&:downcase).uniq.map do |genre_name|
+            Genre.find_or_create_by("LOWER(name) = '#{genre_name.downcase}'") do |genre|
+              genre.name = genre_name.capitalize
+            end
+          end
 
-      if Book.where(isbn13: book_data[:isbn13]).count.zero?
-        # Create the book record
-        book = Book.new(
-          title: book_data[:title],
-          publication_year: book_data[:publication_year].to_i,
-          isbn10: book_data[:isbn10],
-          isbn13: book_data[:isbn13],
-          page_count: book_data[:number_of_pages].to_i
-        )
-        # Download and attach the cover image
-        if book_data[:cover_image_url].present?
-          begin
-            cover_image_file = URI.open(book_data[:cover_image_url])
-            book.cover_image.attach(io: cover_image_file, filename: "cover_#{isbn}.jpg")
-          rescue OpenURI::HTTPError => e
-            Rails.logger.error "Failed to open image URL: #{e.message}"
-            # You might want to handle this errors more gracefully in production
+          if Book.where(isbn13: book_data[:isbn13]).count.zero?
+            # Create the book record
+            book = Book.new(
+              title: book_data[:title],
+              publication_year: book_data[:publication_year].to_i,
+              isbn10: book_data[:isbn10],
+              isbn13: book_data[:isbn13],
+              page_count: book_data[:number_of_pages].to_i
+            )
+
+            # Download and attach the cover image
+            if book_data[:cover_image_url].present?
+              cover_image_file = URI.open(book_data[:cover_image_url])
+              book.cover_image.attach(io: cover_image_file, filename: "cover_#{isbn}.jpg")
+            end
+
+            book.save!
+            book.genres << genres
+            book.authors << authors
+
+            flash[:success] = "Successfully added #{book_data[:title]}"
+            redirect_to book_path(book) and return
+          else
+            flash[:error] = 'Book already exists'
+            redirect_to new_book_path and return
           end
         end
-
-        if book.save
-          book.genres << genres
-          book.authors << authors
-          flash[:success] = "Successfully added #{book_data[:title]}"
-          redirect_to book_path(book)
-        else
-          flash[:error] = book.errors.full_messages
-          redirect_to new_book_path
-        end
-      else
-        flash[:error] = 'Book already exists'
+      rescue ActiveRecord::RecordInvalid, OpenURI::HTTPError => e
+        Rails.logger.error "Error occurred: #{e.message}"
+        Rails.logger.error(e.backtrace&.join("\n"))
+        flash[:error] = "An error occurred while adding the book: #{e.message}"
         redirect_to new_book_path
       end
     else
@@ -108,6 +113,7 @@ class BooksController < ApplicationController
 
   # DELETE /books/1 or /books/1.json
   def destroy
+    remove_attachments
     @book.destroy!
 
     respond_to do |format|
@@ -146,5 +152,9 @@ class BooksController < ApplicationController
          .group('genres.id')
          .order('book_count DESC')
          .to_a
+  end
+
+  def remove_attachments
+    @book.cover_image.purge if @book.cover_image.attached?
   end
 end

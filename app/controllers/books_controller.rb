@@ -25,11 +25,15 @@ class BooksController < ApplicationController
   def scan
     isbn = params[:isbn]
     book_data = OpenLibraryService.fetch_book_details(isbn.to_s)
+    puts "receive book data: #{book_data}"
 
-    if book_data && book_data[:isbn]
-      # Create or find the authors
+    if book_data && book_data[:isbn13]
+      # Create or find the authors and genres
       authors = book_data[:authors].map do |author|
         Author.find_or_create_by(name: author)
+      end
+      genres = book_data[:genres].map do |genre_name|
+        Genre.find_or_create_by(name: genre_name)
       end
 
       if Book.where(isbn13: book_data[:isbn13]).count.zero?
@@ -41,7 +45,6 @@ class BooksController < ApplicationController
           isbn13: book_data[:isbn13],
           page_count: book_data[:number_of_pages].to_i
         )
-
         # Download and attach the cover image
         if book_data[:cover_image_url].present?
           begin
@@ -54,9 +57,6 @@ class BooksController < ApplicationController
         end
 
         if book.save
-          genres = book_data[:genres].map do |genre_name|
-            Genre.find_or_create_by(name: genre_name)
-          end
           book.genres << genres
           book.authors << authors
           flash[:success] = "Successfully added #{book_data[:title]}"

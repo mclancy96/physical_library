@@ -20,7 +20,7 @@ class BorrowingsController < ApplicationController
 
   # POST /borrowings or /borrowings.json
   def create
-    if current_user.borrow_count >= 5
+    if current_user.borrowing_count >= 5
       redirect_to books_path, error: 'You already have 5 borrowed books! You cannot borrow any more books'
     else
       Borrowing.create!(

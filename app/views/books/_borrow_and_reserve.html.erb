@@ -1,19 +1,19 @@
 <div class="btn-group" role="group" aria-label="Action Buttons">
   <% if book.borrowed? && book.borrowers.include?(current_user) %>
-    <%= button_to "Return Book", borrowing_path(book.borrowings.where(member_id: current_user.id).first), method: :delete, class: "btn btn-outline-danger" %>
+    <%= button_to "Return Book", borrowing_path(book.borrowings.where(member_id: current_user.id).first), method: :delete, class: "btn btn-outline-danger mx-1" %>
   <% elsif book.borrowed? or (book.reserved? && book.reservation.member != current_user) %>
-    <form><button class='btn btn-outline-primary' disabled>Borrow Book</button></form>
+    <form><button class='btn btn-outline-primary mx-1' disabled>Borrow Book</button></form>
   <% else %>
-    <%= button_to "Borrow Book", borrowings_path(book_id: book.id, member_id: current_user.id), method: :post, class: "btn btn-outline-primary" %>
+    <%= button_to "Borrow Book", borrowings_path(book_id: book.id, member_id: current_user.id), method: :post, class: "btn btn-outline-primary mx-1" %>
   <% end %>
 
   <%if book.borrowed? %>
     <% if book.reserved? && book.reservation.member == current_user %>
-      <%= button_to "Cancel Reservation", reservation_path(book.reservation), method: :delete, class: "btn btn-outline-danger" %>
+      <%= button_to "Cancel Reservation", reservation_path(book.reservation), method: :delete, class: "btn btn-outline-danger mx-1" %>
     <% elsif book.reserved? or (book.borrowed? && book.borrowers.include?(current_user)) %>
-      <form><button class='btn btn-outline-primary' disabled>Reserve Book</button></form>
+      <form><button class='btn btn-outline-primary mx-1' disabled>Reserve Book</button></form>
     <% else %>
-      <%= button_to "Reserve Book", reservations_path(book_id: book.id, member_id: current_user.id), method: :post, class: "btn btn-outline-primary" %>
+      <%= button_to "Reserve Book", reservations_path(book_id: book.id, member_id: current_user.id), method: :post, class: "btn btn-outline-primary mx-1" %>
     <% end %>
   <% end %>
 

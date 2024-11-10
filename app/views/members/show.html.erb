@@ -8,10 +8,10 @@
     <%= button_to("Delete Member", member_path(@member), class: "btn btn-danger mx-2", type: 'button') if (current_user.role == :admin or current_user == @member) %>
   </div>
   <hr>
-  <div class="container text-start">
+  <div class="container text-center">
     <div class="row align-items-start">
       <div class="col-md-6 col-12-sm">
-        <h2>Borrowed Books</h2>
+        <h2 class="text-center">Borrowed Books</h2>
         <table class="table table-responsive table-bordered m-2">
           <thead>
           <tr>
@@ -23,31 +23,31 @@
           </thead>
           <tbody>
           <% @member.borrowings.each do |borrowing| %>
-            <%= render 'books/book_row', book: borrowing.book, date1: borrowing.borrow_date, date2: borrowing.due_date  %>
+            <%= render 'books/book_row', book: borrowing.book, date1: borrowing.borrow_date, date2: borrowing.due_date%>
           <% end %>
           </tbody>
         </table>
       </div>
       <div class="col-md-6 col-12-sm">
-        <h2>Reserved Books</h2>
+        <h2 class="text-center">Reserved Books</h2>
         <table class="table table-responsive table-bordered m-2">
           <thead>
           <tr>
             <th scope="col">Title</th>
             <th scope="col">Author</th>
-            <th scope="col">Reservation Date</th>
-            <th scope="col">Expiration Date</th>
+            <th scope="col">Reserved On</th>
+            <th scope="col">Expires On</th>
           </tr>
           </thead>
           <tbody>
           <% @member.reservations.each do |reservation| %>
-            <%= render 'books/book_row', book: reservation.book, date1: reservation.reservation_date, date2: reservation.expiration_date  %>
+            <%= render 'books/book_row', book: reservation.book, date1: reservation.reservation_date, date2: reservation.expiration_date %>
           <% end %>
           </tbody>
         </table>
       </div>
       <div class="col-md-6 col-12-sm">
-        <h2>Liked Books</h2>
+        <h2 class="text-center">Liked Books</h2>
         <table class="table table-responsive table-bordered m-2">
           <thead>
           <tr>

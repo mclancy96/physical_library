@@ -42,12 +42,18 @@ class ApplicationController < ActionController::Base
 
   rescue_from ActiveRecord::RecordNotFound, with: :render_not_found
   rescue_from ActionController::RoutingError, with: :render_not_found
-  rescue_from Exception, with: :render_internal_error
+  rescue_from Exception, with: :log_and_render_internal_error
 
   private
 
   def render_not_found
     redirect_to errors_not_found_path
+  end
+
+  def log_and_render_internal_error(exception)
+    Rails.logger.error("Internal error: #{exception.class} - #{exception.message}")
+    Rails.logger.error(exception.backtrace.join("\n")) # Logs the backtrace for debugging
+    redirect_to errors_internal_error_path
   end
 
   def render_internal_error

@@ -7,11 +7,14 @@ class OpenLibraryService
   def self.fetch_book_details(isbn)
     puts "Fetching book details for ISBN: #{isbn}"
     return nil unless isbn.present? && (isbn.length == 10 || isbn.length == 13)
+
     isbn = ISBN.thirteen(isbn.to_s) #convert to ISBN13 for lookup
     url = URI.parse("#{BASE_URL}#{isbn}.json")
     response = Net::HTTP.get(url)
     data = JSON.parse(response)
     puts "Here is the data response form the api: #{data}"
+    return nil if data.nil? || data.empty?
+
     # Check if the data includes book details
     # Parse the JSON response
     book_info = if data['records'].is_a?(Hash)

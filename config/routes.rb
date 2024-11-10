@@ -8,5 +8,7 @@ Rails.application.routes.draw do
   draw :members
   draw :books
   draw :books_and_members
-  match '*path', to: 'errors#not_found', via: :all
+  match '*unmatched', to: 'errors#not_found', via: :all, constraints: lambda { |req|
+    req.path.exclude?('/rails/*')
+  }
 end

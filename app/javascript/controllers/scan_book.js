@@ -13,17 +13,11 @@ if (scanButton) {
         const html5QrCode = new Html5Qrcode("reader");
         bookInfo.innerText = "Reading text...";
         const qrCodeSuccessCallback = (decodedText, decodedResult) => {
-            console.log(decodedText);
-            console.log(decodedResult);
             reader.style.display = "none";
             bookInput.value = decodedText;
-            console.log("The value of the book info input is:", bookInput.value);
             bookScanForm.submit();
-            html5QrCode.stop().catch(error => {
-                    console.error("Error reading barcode. Found:", decodedText, "Error:", error);
-                    bookInfo.innerText = `Error reading barcode.`;
-                });
-        };
+            html5QrCode.stop().then(r => {});
+        }
 
         const qrCodeErrorCallback = () => {
             bookInfo.innerText = `Error reading barcode.`;

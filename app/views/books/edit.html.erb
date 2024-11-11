@@ -1,10 +1,10 @@
-<h1>Editing book</h1>
-
-<%= render "form", book: @book %>
-
-<br>
-
-<div>
-  <%= link_to "Show this book", @book %> |
-  <%= link_to "Back to books", books_path %>
+<div class="container test-start">
+  <h1>Editing <%=@book.title %></h1>
+  <%= render "form", book: @book, class: 'text-start' %>
+  <br>
+  <div>
+    <%= link_to "Show this book", @book %> |
+    <%= link_to "Back to books", books_path %>
+  </div>
 </div>
+

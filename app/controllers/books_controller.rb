@@ -7,8 +7,7 @@ class BooksController < ApplicationController
   # GET /books or /books.json
   def index
     @books = Book.includes(:genres)
-    @genres = rank_genres
-
+    @genres = Genre.rank_genres
   end
 
   # GET /books/1 or /books/1.json
@@ -149,14 +148,6 @@ class BooksController < ApplicationController
   # Only allow a list of trusted parameters through.
   def book_params
     params.require(:book).permit(:title, :author_id, :genre_id, :publication_date, :isbn10, :isbn13, :cover_image)
-  end
-
-  def rank_genres
-    Genre.joins(:books)
-         .select('genres.*, COUNT(books.id) AS book_count')
-         .group('genres.id')
-         .order('book_count DESC')
-         .to_a
   end
 
   def remove_attachments

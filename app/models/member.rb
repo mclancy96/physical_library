@@ -9,7 +9,7 @@ class Member < ApplicationRecord
   has_many :reservations
   belongs_to :role, optional: true
   has_many :borrowings
-  has_many :books, through: :borrowings
+  has_many :borrowed_books, through: :borrowings, source: :book
 
   before_save { self.email = email.downcase }
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i

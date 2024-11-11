@@ -52,5 +52,4 @@ class Book < ApplicationRecord
   def borrowers
     Borrowing.where(book_id: id).map { |n| Member.find(n.member_id) }
   end
-
 end

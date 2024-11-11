@@ -7,7 +7,8 @@ class ApplicationController < ActionController::Base
   def home
     @recent_likes = Like.order(created_at: :desc).limit(5)
     @wishlist_books = current_user.wishlists
-    @ratings = current_user.ratings.includes(:book)
+    @books = current_user.borrowed_books
+    @genres = Genre.rank_genres
     render 'home'
   end
 

@@ -1,5 +1,5 @@
 <header class="text-center mb-4">
-  <h1>Welcome to Your Digital Library</h1>
+  <h1>Welcome to the Millian Library</h1>
   <p class="lead">Explore books, authors, genres, and more.</p>
 </header>
 
@@ -14,17 +14,16 @@
     <% end %>
   </ul>
 </section>
-<!-- User Ratings -->
+
 <section class="mt-5">
-  <h2>Your Rated Books</h2>
-  <ul class="list-group">
-    <%# @ratings&.each do |rating| %>
-    <!--      <li class="list-group-item d-flex justify-content-between align-items-center">-->
-    <%#= link_to rating.book.title, book_path(rating.book) %>
-    <!--        <span class="badge bg-primary rounded-pill"><%#= rating.value %> / 5</span>-->
-    <!--      </li>-->
-    <%# end %>
-  </ul>
+  <h2>You Are Currently Reading</h2>
+  <div class="container">
+    <div class="row">
+      <% @books.each do |book| %>
+        <%= render partial: 'books/book', locals: { book: book } %>
+      <% end %>
+    </div>
+  </div>
 </section>
 <!-- Currently Reading -->
 
@@ -40,11 +39,3 @@
 <!--  </ul>-->
 <!--</section>-->
 
-
-
-
-
-<!-- Footer -->
-<footer class="text-center mt-5">
-  <p>&copy; <%= Time.current.year %> Library App. All rights reserved.</p>
-</footer>

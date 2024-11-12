@@ -7,10 +7,11 @@ class BooksController < ApplicationController
   # GET /books or /books.json
   def index
     @books = if session[:search_query].present?
-               Book.where('LOWER(title) LIKE ?', "%#{session[:search_query].downcase}%" )
+               Book.where('LOWER(title) LIKE ?', "%#{session[:search_query].downcase}%")
              else
                Book.all
              end
+    @book_count = @books.count
     @genres = Genre.rank_genres
   end
 

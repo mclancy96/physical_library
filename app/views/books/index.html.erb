@@ -2,8 +2,10 @@
 
 <% if session[:search_query].present? %>
   <h1>Search Results for "<%= session[:search_query] %>":</h1>
+  <small><%= @book_count %> Results</small><br>
 <% else %>
   <h1>All Books</h1>
+  <small><%= @book_count %> Results</small><br>
 <% end %>
 
 <%= link_to "New book", new_book_path, class: 'btn btn-info m-2' %>

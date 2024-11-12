@@ -6,13 +6,17 @@ class BooksController < ApplicationController
 
   # GET /books or /books.json
   def index
-    @books = Book.includes(:genres)
+    @books = if session[:search_query].present?
+               Book.where('title LIKE ?', "%#{session[:search_query]}%")
+             else
+               Book.all
+             end
     @genres = Genre.rank_genres
   end
 
   # GET /books/1 or /books/1.json
   def show
-    @genres = rank_genres
+    @genres = Genre.rank_genres
   end
 
   # GET /books/new
@@ -128,14 +132,21 @@ class BooksController < ApplicationController
 
   def book_data_lookup
     @isbn = params[:isbn]
-    service = OpenLibraryService.new(@isbn)
-    @book_data = service.fetch_book_data
-
+    @book_data = OpenLibraryService.fetch_book_details(@isbn)
     if @book_data['errors']
       render json: { error: @book_data['errors'] }, status: :not_found
     else
       render json: @book_data
     end
+  end
+
+  def search
+    if params[:query].present?
+      session[:search_query] = params[:query]
+    else
+      session.delete(:search_query)
+    end
+    redirect_to books_path
   end
 
   private

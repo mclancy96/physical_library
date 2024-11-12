@@ -16,7 +16,12 @@
           <%= link_to "Members", members_path, class: 'nav-link' %>
         </li>
       </ul>
-      <div class="d-flex">
+      <div class="d-flex text-center">
+        <%= form_with(url: books_search_path, method: :get, local: true, class: 'd-flex me-2') do %>
+          <%= text_field_tag :query, params[:query], class: 'form-control me-2', placeholder: 'Search books...' %>
+          <%= submit_tag "Search", class: "btn btn-outline-primary" %>
+        <% end %>
+
         <% if logged_in? %>
           <%= link_to current_user.name, member_path(current_user), class: 'p-1 mx-1 rounded-pill text-bg-primary text-decoration-none text-white' %>
           <%= link_to "Log Out", logout_path, class: "btn btn-info mx-1" %>

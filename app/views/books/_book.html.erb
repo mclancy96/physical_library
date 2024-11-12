@@ -14,17 +14,15 @@
       <h5 class="card-title text-center"><strong><%= link_to book.title.titleize, book_path(book) %></strong></h5>
       <div class="mx-5">
         <span class="card-text"><strong>Publication Year:</strong> <%= book.publication_year %></span><br>
+        <span class="card-text"><strong>Authors:</strong> <%= book.authors.pluck(:name).join(', ') %></span><br>
         <span class="card-text"><strong>Genres:</strong>
           <%= book.genres.map { |genre|
             @genres.sort_by(&:book_count).reverse.find { |g| g.id == genre.id }&.name
           }.compact.first(5).join(", ") %>
       </span><br>
-        <span class="card-text"><strong>Authors:</strong> <%= book.authors.pluck(:name).join(', ') %></span><br>
         <span class="card-text"><strong>Page Count:</strong> <%= book.page_count %></span><br>
-        <span class="card-text"><strong>Shelf Location:</strong> <%= book.shelf_location %></span><br>
         <span class="card-text"><strong>ISBN-10:</strong> <%= book.isbn10 %></span><br>
         <span class="card-text"><strong>ISBN-13:</strong> <%= book.isbn13 %></span><br>
-        <span class="card-text"><strong>Average Rating:</strong> 5</span><br>
       </div>
     </div>
     <div class="card-footer text-body-secondary text-center">

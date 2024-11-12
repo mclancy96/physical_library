@@ -17,14 +17,6 @@ class ApplicationController < ActionController::Base
     redirect_to root_path
   end
 
-  # If inclined to implement
-  # def search
-  #   @query = params[:query]
-  #   @results = Book.where('title LIKE ?', "%#{@query}%")
-  #                  .or(Book.where('description LIKE ?', "%#{@query}%"))
-  #                  .or(Author.where('name LIKE ?', "%#{@query}%"))
-  #                  .or(Genre.where('name LIKE ?', "%#{@query}%"))
-  # end
 
   helper_method def current_user
     @current_user ||= Member.find_by(id: session[:user_id])

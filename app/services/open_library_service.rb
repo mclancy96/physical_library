@@ -42,10 +42,8 @@ class OpenLibraryService
       }
       puts "return obj: #{return_obj}"
       return_obj
-    rescue InvalidISBNError => e
-      Rails.logger.error("Invalid ISBN provided: #{e.message}")
     rescue StandardError => e
-      Rails.logger.error("An unexpected error occurred: #{e.message}")
+      Rails.logger.error("An unexpected error occurred in open library services: #{e.message}")
     end
   end
 end

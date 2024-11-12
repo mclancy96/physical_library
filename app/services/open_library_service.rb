@@ -30,7 +30,7 @@ class OpenLibraryService
     begin
       authors = book_info['data']['authors'].map { |author| author['name'] }
       genres = book_info.dig('data', 'subjects').map { |subject| subject['name'] }
-      {
+      return_obj = {
         title: book_info.dig('data', 'title'),
         authors:,
         genres:,
@@ -40,6 +40,8 @@ class OpenLibraryService
         cover_image_url: book_info.dig('data', 'cover', 'large'), # Use the large cover image
         number_of_pages: book_info.dig('data', 'number_of_pages')
       }
+      puts "return obj: #{return_obj}"
+      return_obj
     rescue InvalidISBNError => e
       Rails.logger.error("Invalid ISBN provided: #{e.message}")
     rescue StandardError => e

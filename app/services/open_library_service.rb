@@ -25,6 +25,7 @@ class OpenLibraryService
     return nil unless book_info
 
     puts "Here's the book_info #{book_info}"
+    puts "Here's the data #{book_info['data']}"
     # Extract relevant data
     begin
       authors = book_info['data']['authors'].map { |author| author['name'] }
@@ -39,12 +40,10 @@ class OpenLibraryService
         cover_image_url: book_info.dig('data', 'cover', 'large'), # Use the large cover image
         number_of_pages: book_info.dig('data', 'number_of_pages')
       }
-    rescue
-      if StandardError
-        Rails.logger.error('OpenLibraryService errors:')
-      elsif InvalidISBNError
-        Rails.logger.error('The isbn provided is invalid')
-      end
+    rescue InvalidISBNError => e
+      Rails.logger.error("Invalid ISBN provided: #{e.message}")
+    rescue StandardError => e
+      Rails.logger.error("An unexpected error occurred: #{e.message}")
     end
   end
 end

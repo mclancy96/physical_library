@@ -33,7 +33,7 @@ class BooksController < ApplicationController
     book_data = OpenLibraryService.fetch_book_details(isbn.to_s)
     puts "receive book data: #{book_data}"
 
-    if book_data && book_data[:isbn13]
+    if book_data&.is_a?(Hash) && book_data[:isbn13]
       begin
         ActiveRecord::Base.transaction do
           # Create or find the authors and genres

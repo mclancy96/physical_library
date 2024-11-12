@@ -14,7 +14,7 @@ class OpenLibraryService
     data = JSON.parse(response)
     puts "Here is the data response form the api: #{data}"
     return nil if data.nil? || data.empty?
-
+    puts "Here's the records #{data['records']}"
     # Check if the data includes book details
     # Parse the JSON response
     book_info = if data['records'].is_a?(Hash)
@@ -24,6 +24,7 @@ class OpenLibraryService
                 end
     return nil unless book_info
 
+    puts "Here's the book_info #{book_info}"
     # Extract relevant data
     begin
       authors = book_info['data']['authors'].map { |author| author['name'] }

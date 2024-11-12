@@ -7,7 +7,7 @@ class BooksController < ApplicationController
   # GET /books or /books.json
   def index
     @books = if session[:search_query].present?
-               Book.where('title LIKE ?', "%#{session[:search_query]}%")
+               Book.where('LOWER(title) LIKE ?', "%#{session[:search_query].downcase}%" )
              else
                Book.all
              end
@@ -142,7 +142,7 @@ class BooksController < ApplicationController
 
   def search
     if params[:query].present?
-      session[:search_query] = params[:query]
+      session[:search_query] = params[:query].to_s.strip
     else
       session.delete(:search_query)
     end

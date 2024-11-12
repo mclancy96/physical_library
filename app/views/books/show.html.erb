@@ -15,14 +15,19 @@
         <% else %>
           <%= image_tag "placeholder-image.png", class: 'card-img-top img-fluid', alt: "Placeholder cover image" %>
         <% end %>
-        <button class="like-button pt-2 pr-2"  data-book-id="<%= @book.id %>">
+        <button class="like-button pt-2 pr-2" data-book-id="<%= @book.id %>">
           <span class="heart-icon  <%= @book.liked_by?(current_user) ? 'filled' : 'empty' %>-heart"></span>
         </button>
       </div>
     </div>
 
-    <div class="col-md-8 text-start">
+    <div class="col-md-8 p-2 text-start">
       <h1 class="display-4"><%= @book.title.titleize %></h1>
+      <% if @book.borrowers.include?(current_user) and @read_status and @progress %>
+        <p class="text-success"><strong>Current Progress:</strong> <%= @progress %>% (<%= @read_status.last_page_read%>/<%= @book.page_count%>)
+          <span><%= link_to "Update Progress", "#update-status", class: 'text-primary' %></span>
+        </p>
+      <% end %>
       <p><strong>Publication Year:</strong> <%= @book.publication_year %></p>
       <p><strong>Genres:</strong> <%= @book.genres.map { |genre|
         @genres.sort_by(&:book_count).reverse.find { |g| g.id == genre.id }&.name
@@ -45,7 +50,7 @@
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-              Are you sure you'd like to delete <%=@book.title %>?
+              Are you sure you'd like to delete <%= @book.title %>?
             </div>
             <div class="modal-footer">
               <%= button_to 'Delete', book_path(@book), method: :delete, class: 'btn btn-danger', data: { turbo: false } %>
@@ -58,15 +63,23 @@
   </div>
 </div>
 
-<div class="container mt-5">
+<div class="container mt-5 border border-4">
   <h2>Borrow and Return Status</h2>
   <%= render 'books/borrow_and_reserve', book: @book %>
+
   <% if @book.borrowed? %>
-    <p>Currently borrowed by: <%=@book.borrowers.pluck(:name).join(', ')  %></p>
+    <p class="m-2">Currently borrowed by: <%= @book.borrowers.pluck(:name).join(', ') %></p>
+    <% if @book.borrowers.include?(current_user) and @read_status %>
+      <h3 id='update-status'>Update Reading Status?</h3>
+      <p>Looks like you're currently reading this book. Would you like to update your reading status?</p>
+      <div class="container">
+        <%= render 'read_statuses/form', read_status: @read_status %>
+      </div>
+    <% end %>
   <% end %>
 
   <% if @book.reserved? %>
-    <p>Currently reserved by: <%=@book.reservation.member.name %></p>
+    <p class="m-2">Currently reserved by: <%= @book.reservation.member.name %></p>
   <% end %>
 
 </div>

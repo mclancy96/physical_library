@@ -1,8 +1,7 @@
-<%= form_with(model: read_status) do |form| %>
-  <% if read_status.errors.any? %>
+<%= form_with(model: read_status, url: read_status_path, method: :patch, class: 'row g-3') do |form| %>
+  <% if read_status&.errors&.any? %>
     <div style="color: red">
       <h2><%= pluralize(read_status.errors.count, "errors") %> prohibited this read_status from being saved:</h2>
-
       <ul>
         <% read_status.errors.each do |error| %>
           <li><%= error.full_message %></li>
@@ -11,27 +10,24 @@
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :book_id, style: "display: block" %>
-    <%= form.number_field :book_id %>
+  <div class="mb-3 col-lg-4 col-md-6 col-sm-12">
+    <%= form.label :status, "Read Status", class: "form-label" %>
+    <div class="form-group">
+      <%= form.select :status, options_for_select([['Unread', :unread], ['Reading', :reading], ['Completed', :completed], ['Abandoned', :abandoned]], read_status.status), class: "form-select" %>
+    </div>
+  </div>
+
+  <div class="mb-3 col-lg-4 col-md-6 col-sm-12">
+    <%= form.label :finished_date, style: "display: block", class: "form-label" %>
+    <%= form.date_field :finished_date, class: 'form-control' %>
+  </div>
+
+  <div class="mb-3 col-lg-4 col-md-6 col-sm-12">
+    <%= form.label :last_page_read, style: "display: block", class: "form-label" %>
+    <%= form.number_field :last_page_read, class: 'form-control' %>
   </div>
 
   <div>
-    <%= form.label :member_id, style: "display: block" %>
-    <%= form.number_field :member_id %>
-  </div>
-
-  <div>
-    <%= form.label :status, style: "display: block" %>
-    <%= form.text_field :status %>
-  </div>
-
-  <div>
-    <%= form.label :finished_date, style: "display: block" %>
-    <%= form.date_field :finished_date %>
-  </div>
-
-  <div>
-    <%= form.submit %>
+    <%= form.submit class: 'btn btn-primary', label: 'Update Status'%>
   </div>
 <% end %>

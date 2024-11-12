@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_11_08_023318) do
+ActiveRecord::Schema[7.1].define(version: 2024_11_12_045410) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -164,13 +164,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_08_023318) do
   create_table "read_statuses", force: :cascade do |t|
     t.integer "member_id", null: false
     t.integer "book_id", null: false
-    t.integer "status", default: 0
+    t.integer "status", default: 1
     t.date "finished_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "last_page_read"
     t.index ["book_id"], name: "index_read_statuses_on_book_id"
-    t.index ["member_id", "book_id"], name: "index_read_statuses_on_member_id_and_book_id", unique: true
     t.index ["member_id"], name: "index_read_statuses_on_member_id"
   end
 

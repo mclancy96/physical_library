@@ -31,12 +31,17 @@ class BorrowingsController < ApplicationController
         return_date: params[:return_date] ||= nil,
         status: params[:status] ||= nil
       )
+      ReadStatus.create!(
+        member_id: params[:member_id],
+        book_id: params[:book_id]
+      )
       redirect_to books_path, notice: 'Book borrowed successfully.'
     end
   end
 
   # PATCH/PUT /borrowings/1 or /borrowings/1.json
   def update
+    params[:status] ||= params[:status].to_i
     respond_to do |format|
       if @borrowing.update(params)
         format.html { redirect_to @borrowing, notice: "Borrowing was successfully updated." }
@@ -50,6 +55,12 @@ class BorrowingsController < ApplicationController
 
   # DELETE /borrowings/1 or /borrowings/1.json
   def destroy
+    status = ReadStatus.where(member_id: @borrowing.member_id, book_id: @borrowing.book_id).last
+    if status
+      status.finished_date = DateTime.now
+      status.status = :completed
+      status.save!
+    end
     @borrowing.destroy unless @borrowing.borrower != current_user
 
     redirect_to books_path, notice: 'Book returned successfully.'

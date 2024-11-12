@@ -18,6 +18,9 @@ class BooksController < ApplicationController
   # GET /books/1 or /books/1.json
   def show
     @genres = Genre.rank_genres
+    @read_status = ReadStatus.where(member_id: current_user.id, book_id: @book.id)
+                             .where.not(status: [2, 3]).first
+    @progress = ((@read_status&.last_page_read.to_f / @book.page_count) * 100).round(2) if @read_status.present? and @book.page_count > 0
   end
 
   # GET /books/new

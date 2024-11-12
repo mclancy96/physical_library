@@ -28,8 +28,8 @@ class OpenLibraryService
     puts "Here's the data #{book_info['data']}"
     # Extract relevant data
     begin
-      authors = book_info['data']['authors'].map { |author| author['name'] }
-      genres = book_info.dig('data', 'subjects').map { |subject| subject['name'] }
+      authors = book_info['data']['authors'].map { |author| author['name'] } if book_info['data']['authors']
+      genres = book_info.dig('data', 'subjects').map { |subject| subject['name'] } if book_info['data']['subjects']
       return_obj = {
         title: book_info.dig('data', 'title'),
         authors:,

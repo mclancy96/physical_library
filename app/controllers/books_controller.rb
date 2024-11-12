@@ -37,21 +37,26 @@ class BooksController < ApplicationController
       begin
         ActiveRecord::Base.transaction do
           # Create or find the authors and genres
+          if book_data[:authors]
+            authors = book_data[:authors].uniq.map do |author_name|
+              author_name_downcase = author_name.downcase
+              author = Author.where('LOWER(name) = ?', author_name_downcase).first_or_initialize
+              author.name = author_name.capitalize if author.new_record?
+              author.save
+              author
+            end
+          end
 
-          authors = book_data[:authors].uniq.map do |author_name|
-            author_name_downcase = author_name.downcase
-            author = Author.where('LOWER(name) = ?', author_name_downcase).first_or_initialize
-            author.name = author_name.capitalize if author.new_record?
-            author.save
-            author
+          if book_data[:genres]
+            genres = book_data[:genres].uniq.map do |genre_name|
+              genre_name_downcase = genre_name.downcase
+              genre = Genre.where('LOWER(name) = ?', genre_name_downcase).first_or_initialize
+              genre.name = genre_name.capitalize if genre.new_record?
+              genre.save
+              genre
+            end
           end
-          genres = book_data[:genres].uniq.map do |genre_name|
-            genre_name_downcase = genre_name.downcase
-            genre = Genre.where('LOWER(name) = ?', genre_name_downcase).first_or_initialize
-            genre.name = genre_name.capitalize if genre.new_record?
-            genre.save
-            genre
-          end
+
 
           if Book.where(isbn13: book_data[:isbn13]).count.zero?
             # Create the book record
@@ -74,8 +79,8 @@ class BooksController < ApplicationController
             end
 
             book.save!
-            book.genres << genres
-            book.authors << authors
+            book.genres << genres if genres
+            book.authors << authors if authors
 
             flash[:success] = "Successfully added #{book_data[:title]}"
             redirect_to book_path(book) and return

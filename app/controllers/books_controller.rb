@@ -66,7 +66,7 @@ class BooksController < ApplicationController
               publication_year: book_data[:publication_year].to_i,
               isbn10: book_data[:isbn10],
               isbn13: book_data[:isbn13],
-              page_count: book_data[:number_of_pages].to_i
+              page_count: book_data[:page_count].to_i
             )
 
             # Download and attach the cover image

@@ -44,7 +44,9 @@ gem 'sass-rails'
 
 gem 'bootstrap'
 
-gem 'will_paginate'
+gem 'will_paginate', '~> 3.3'
+
+gem 'bootstrap-will_paginate'
 
 gem 'mini_magick'
 

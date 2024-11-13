@@ -16,11 +16,13 @@
 
 <div class="container">
   <% if @books.any? %>
+    <%= will_paginate @books, renderer: BootstrapPaginationRenderer %>
     <div class="row">
       <% @books.each do |book| %>
         <%= render partial: 'book', locals: { book: book } %>
       <% end %>
     </div>
+    <%= will_paginate @books, renderer: BootstrapPaginationRenderer %>
   <% else %>
     <p>No books found for "<%= session[:search_query] %>".</p>
   <% end %>

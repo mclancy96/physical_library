@@ -10,7 +10,7 @@ class BooksController < ApplicationController
                Book.where('LOWER(title) LIKE ?', "%#{session[:search_query].downcase}%").order(title: :asc)
              else
                Book.all.order(title: :asc)
-             end
+             end.paginate(page: params[:page], per_page: 9)
     @book_count = @books.count
     @genres = Genre.rank_genres
   end

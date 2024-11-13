@@ -18,12 +18,18 @@
 
   <div class="m-3">
     <%= form.label :author_id, style: "display: block", class: 'form-label' %>
-    <%= form.number_field :author_id, class: 'form-control' %>
+    <%= form.text_field :author_id, class: 'form-control', 'aria-describedby':"authorHelper" %>
+    <div id="authorHelper" class="form-text">
+      Please separate each author by a comma and a space (", "). E.g. "John Smith, Jane Doe, etc."
+    </div>
   </div>
 
   <div class="m-3">
     <%= form.label :genre_id, style: "display: block", class: 'form-label' %>
-    <%= form.number_field :genre_id, class: 'form-control' %>
+    <%= form.text_field :genre_id, class: 'form-control','aria-describedby':"genreHelper" %>
+    <div id="genreHelper" class="form-text">
+      Please separate each genre by a comma and a space (", "). E.g. "Fiction, Non-Fiction, etc."
+    </div>
   </div>
 
   <div class="m-3">
@@ -49,10 +55,10 @@
 
   <div class="form-group m-3">
     <%= form.label :cover_image, "Cover Image", class: 'form-label' %>
-    <%= form.file_field :cover_image, class: "form-control" %>
+    <%= form.file_field :cover_image, accept: 'image/*', class: "form-control" %>
   </div>
 
-  <div>
+  <div class="m-3 text-center">
     <%= form.submit class: 'btn btn-primary' %>
   </div>
 </div>

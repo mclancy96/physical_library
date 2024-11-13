@@ -20,7 +20,9 @@ class BooksController < ApplicationController
     @genres = Genre.rank_genres
     @read_status = ReadStatus.where(member_id: current_user.id, book_id: @book.id)
                              .where.not(status: [2, 3]).first
-    @progress = ((@read_status&.last_page_read.to_f / @book.page_count) * 100).round(2) if @read_status.present? and @book.page_count > 0
+    if @read_status.present? && (@book.page_count > 0)
+      @progress = ((@read_status&.last_page_read.to_f / @book.page_count) * 100).round(2)
+    end
   end
 
   # GET /books/new
@@ -56,7 +58,6 @@ class BooksController < ApplicationController
               genre
             end
           end
-
 
           if Book.where(isbn13: book_data[:isbn13]).count.zero?
             # Create the book record
@@ -106,17 +107,58 @@ class BooksController < ApplicationController
 
   # POST /books or /books.json
   def create
-    @book = Book.new(book_params)
+    if (book_params[:isbn10].nil? || book_params[:isbn10] == '') &&
+       (book_params[:isbn13].nil? || book_params[:isbn13] == '')
+      flash[:error] = 'Must include ISBN10 or ISBN13'
+      redirect_to new_book_path
+      return false
+    end
 
-    respond_to do |format|
-      if @book.save
-        format.html { redirect_to @book, notice: 'Book was successfully created.' }
-        format.json { render :show, status: :created, location: @book }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @book.errors, status: :unprocessable_entity }
+    if book_params[:author_id]
+      authors = book_params[:author_id].split(', ').uniq.map do |author_name|
+        author_name_downcase = author_name.downcase
+        author = Author.where('LOWER(name) = ?', author_name_downcase).first_or_initialize
+        author.name = author_name.capitalize if author.new_record?
+        author.save
+        author
       end
     end
+
+    if book_params[:genre_id]
+      genres = book_params[:genre_id].split(', ').uniq.map do |genre_name|
+        genre_name_downcase = genre_name.downcase
+        genre = Genre.where('LOWER(name) = ?', genre_name_downcase).first_or_initialize
+        genre.name = genre_name.capitalize if genre.new_record?
+        genre.save
+        genre
+      end
+    end
+
+    book = Book.new(
+      title: book_params[:title],
+      publication_year: book_params[:publication_year].to_i,
+      isbn10: book_params[:isbn10].nil? || book_params[:isbn10] == '' ? ISBN.ten(book_params[:isbn13].to_s) : book_params[:isbn10],
+      isbn13: book_params[:isbn13].nil? || book_params[:isbn13] == '' ? ISBN.thirteen(book_params[:isbn10].to_s) : book_params[:isbn13],
+      page_count: book_params[:page_count].to_i
+    )
+
+    book.cover_image.attach(book_params[:cover_image]) if book_params && book_params[:cover_image].present?
+
+    if book.save
+      book.genres << genres if genres
+      book.authors << authors if authors
+      flash[:success] = "Successfully added #{book.title}"
+      redirect_to book
+    else
+      flash[:error] = 'Error creating book'
+      redirect_to new_book_path
+    end
+
+  rescue StandardError => e
+    Rails.logger.error "Failed to add book: #{e.message}"
+    Rails.logger.error "Failed to add book: #{e.backtrace&.join("\n")}"
+    flash[:error] = "Failed to add book: #{e.message}"
+    redirect_to new_book_path
   end
 
   # PATCH/PUT /books/1 or /books/1.json
@@ -171,7 +213,8 @@ class BooksController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def book_params
-    params.require(:book).permit(:title, :author_id, :genre_id, :publication_date, :isbn10, :isbn13, :cover_image)
+    params.require(:book).permit(:title, :author_id, :genre_id, :publication_year, :isbn10, :isbn13, :cover_image,
+                                 :page_count)
   end
 
   def remove_attachments

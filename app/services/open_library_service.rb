@@ -12,7 +12,7 @@ class OpenLibraryService
       begin
         ISBN.ten(isbn)
       rescue ISBN::No10DigitISBNAvailable
-        "0"
+        nil
       end
     isbn13 = ISBN.thirteen(isbn.to_s) # convert to ISBN13 for lookup
     url = URI.parse("#{BASE_URL}/isbn/#{isbn}.json")

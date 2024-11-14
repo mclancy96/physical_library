@@ -30,5 +30,5 @@
 en:
   hello: "Hello world"
   will_paginate:
-    previous_label: "&laquo;".html_safe
-    next_label: "&raquo;".html_safe
+    previous_label: "&laquo;"
+    next_label: "&raquo;"

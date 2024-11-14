@@ -28,6 +28,8 @@ class BooksController < ApplicationController
   # GET /books/new
   def new
     @book = Book.new
+    @authors = ''
+    @genres = ''
   end
 
   def scan
@@ -103,7 +105,10 @@ class BooksController < ApplicationController
   end
 
   # GET /books/1/edit
-  def edit; end
+  def edit
+    @authors = @book.authors.pluck(:name).join(', ')
+    @genres = @book.genres.pluck(:name).join(', ')
+  end
 
   # POST /books or /books.json
   def create
@@ -163,15 +168,56 @@ class BooksController < ApplicationController
 
   # PATCH/PUT /books/1 or /books/1.json
   def update
-    respond_to do |format|
-      if @book.update(book_params)
-        format.html { redirect_to @book, notice: 'Book was successfully updated.' }
-        format.json { render :show, status: :ok, location: @book }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @book.errors, status: :unprocessable_entity }
+    if (book_params[:isbn10].nil? || book_params[:isbn10] == '') &&
+      (book_params[:isbn13].nil? || book_params[:isbn13] == '')
+      flash[:error] = 'Must include ISBN10 or ISBN13'
+      redirect_to book_path(@book) and return
+    end
+
+    if book_params[:author_id]
+      authors = book_params[:author_id].split(', ').uniq.map do |author_name|
+        author_name_downcase = author_name.downcase
+        author = Author.where('LOWER(name) = ?', author_name_downcase).first_or_initialize
+        author.name = author_name.capitalize if author.new_record?
+        author.save
+        author
       end
     end
+
+    if book_params[:genre_id]
+      genres = book_params[:genre_id].split(', ').uniq.map do |genre_name|
+        genre_name_downcase = genre_name.downcase
+        genre = Genre.where('LOWER(name) = ?', genre_name_downcase).first_or_initialize
+        genre.name = genre_name.capitalize if genre.new_record?
+        genre.save
+        genre
+      end
+    end
+
+    @book.title = book_params[:title] if book_params[:title].present?
+    @book.publication_year = book_params[:publication_year] if book_params[:publication_year].present?
+    @book.isbn10 = book_params[:isbn10] if book_params[:isbn10].present?
+    @book.isbn13 = book_params[:isbn13] if book_params[:isbn13].present?
+    @book.page_count = book_params[:page_count] if book_params[:page_count].present?
+    @book.cover_image.attach(book_params[:cover_image]) if book_params[:cover_image].present?
+
+    if @book.save
+      BookGenre.where(book_id: @book.id).destroy_all
+      AuthorBook.where(book_id: @book.id).destroy_all
+      @book.genres << genres if genres
+      @book.authors << authors if authors
+      flash[:success] = "Successfully updated #{@book.title}"
+      redirect_to @book
+    else
+      flash[:error] = 'Error updating book'
+      redirect_to edit_book_path(@book)
+    end
+
+  rescue StandardError => e
+    Rails.logger.error "Failed to add book: #{e.message}"
+    Rails.logger.error "Failed to add book: #{e.backtrace&.join("\n")}"
+    flash[:error] = "Failed to add book: #{e.message}"
+    redirect_to edit_book_path(@book)
   end
 
   # DELETE /books/1 or /books/1.json

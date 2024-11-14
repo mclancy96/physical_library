@@ -37,7 +37,6 @@
       <p><strong>Page Count:</strong> <%= @book.page_count %></p>
       <p><strong>ISBN-10:</strong> <%= @book.isbn10 %></p>
       <p><strong>ISBN-13:</strong> <%= @book.isbn13 %></p>
-      <p><strong>Average Rating:</strong> <%= @book.average_rating.to_s ||= "Not Rated" %></p>
       <%= link_to 'Edit Book', edit_book_path(@book), class: 'btn btn-primary' %>
       <button type="button" class="btn btn-primary btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModel">
         Delete Book

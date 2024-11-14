@@ -18,7 +18,7 @@
 
   <div class="m-3">
     <%= form.label :author_id, style: "display: block", class: 'form-label' %>
-    <%= form.text_field :author_id, class: 'form-control', 'aria-describedby':"authorHelper" %>
+    <%= form.text_field :author_id, class: 'form-control', 'aria-describedby': "authorHelper", value: @authors %>
     <div id="authorHelper" class="form-text">
       Please separate each author by a comma and a space (", "). E.g. "John Smith, Jane Doe, etc."
     </div>
@@ -26,7 +26,7 @@
 
   <div class="m-3">
     <%= form.label :genre_id, style: "display: block", class: 'form-label' %>
-    <%= form.text_field :genre_id, class: 'form-control','aria-describedby':"genreHelper" %>
+    <%= form.text_field :genre_id, class: 'form-control','aria-describedby':"genreHelper", value: @genres %>
     <div id="genreHelper" class="form-text">
       Please separate each genre by a comma and a space (", "). E.g. "Fiction, Non-Fiction, etc."
     </div>

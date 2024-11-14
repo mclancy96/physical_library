@@ -12,7 +12,7 @@ class OpenLibraryService
       begin
         ISBN.ten(isbn)
       rescue ISBN::No10DigitISBNAvailable
-        nil
+        "0"
       end
     isbn13 = ISBN.thirteen(isbn.to_s) # convert to ISBN13 for lookup
     url = URI.parse("#{BASE_URL}#{isbn}.json")
@@ -39,7 +39,7 @@ class OpenLibraryService
         authors:,
         genres:,
         publication_year: book_info.dig('data', 'publish_date'),
-        isbn10: isbn10.nil? ? 0 : isbn10,
+        isbn10:,
         isbn13:,
         cover_image_url: book_info.dig('data', 'cover', 'large'), # Use the large cover image
         page_count: book_info.dig('data', 'number_of_pages')

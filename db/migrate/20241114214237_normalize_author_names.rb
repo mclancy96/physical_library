@@ -12,6 +12,7 @@ class NormalizeAuthorNames < ActiveRecord::Migration[7.1]
           AuthorBook.find_or_create_by!(book_id:, author_id: author.id)
         end
         duplicate.destroy
+        puts "deleted #{author.name}"
       else
         author.update!(name: normalized_name)
       end

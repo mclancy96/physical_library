@@ -8,10 +8,10 @@ class BooksController < ApplicationController
   def index
     @books = if session[:search_query].present?
                search_term = "%#{session[:search_query].downcase}%"
+               puts "Searching for: #{search_term}"
 
-               @books = Book.joins(:authors, :genres)
+               @books = Book.left_joins(:authors, :genres)
                             .where('LOWER(books.title) LIKE :search OR LOWER(authors.name) LIKE :search OR LOWER(genres.name) LIKE :search', search: search_term)
-                            .distinct
                             .order(title: :asc)
              else
                Book.all.order(title: :asc)

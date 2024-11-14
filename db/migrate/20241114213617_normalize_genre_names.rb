@@ -3,14 +3,15 @@ class NormalizeGenreNames < ActiveRecord::Migration[7.1]
     Genre.find_each do |genre|
       normalized_name = genre.name.downcase.titleize
 
-      # Find duplicates with different capitalization
       duplicate = Genre.where('LOWER(name) = ? AND id != ?', normalized_name.downcase, genre.id).first
 
       if duplicate
-        # If a duplicate exists, transfer associations, then delete the duplicate
-        genre.books << duplicate.books
+        # Transfer book associations from the duplicate to the original genre
+        duplicate.book_ids.each do |book_id|
+          BookGenre.where(book_id:, genre_id: duplicate.id).delete_all
+          BookGenre.find_or_create_by!(book_id:, genre_id: genre.id)
+        end
         duplicate.destroy
-        puts "destroying #{genre.name} duped to #{normalized_name}"
       else
         genre.update!(name: normalized_name)
       end

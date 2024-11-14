@@ -3,14 +3,15 @@ class NormalizeAuthorNames < ActiveRecord::Migration[7.1]
     Author.find_each do |author|
       normalized_name = author.name.downcase.titleize
 
-      # Find duplicates with different capitalization
       duplicate = Author.where('LOWER(name) = ? AND id != ?', normalized_name.downcase, author.id).first
 
       if duplicate
-        # If a duplicate exists, transfer associations, then delete the duplicate
-        author.books << duplicate.books
+        # Transfer book associations from the duplicate to the original author
+        duplicate.book_ids.each do |book_id|
+          AuthorBook.where(book_id:, author_id: duplicate.id).delete_all
+          AuthorBook.find_or_create_by!(book_id:, author_id: author.id)
+        end
         duplicate.destroy
-        puts "destroying #{author.name} duped to #{normalized_name}"
       else
         author.update!(name: normalized_name)
       end

@@ -235,21 +235,27 @@ class BooksController < ApplicationController
           # Create or find the authors and genres
           if book_data[:authors]
             authors = book_data[:authors].uniq.map do |author_name|
-              author_name_capitalized = author_name.capitalize
-              Author.find_or_create_by!(name: author_name_capitalized)
+              author_name_capitalized = author_name.downcase.titleize # Consistent capitalization
+              author = Author.where('LOWER(name) = ?', author_name.downcase).first_or_initialize
+              author.name = author_name_capitalized if author.new_record?
+              author.save
+              author
             rescue ActiveRecord::RecordInvalid => e
               Rails.logger.error "Author validation failed: #{e.message}"
-              nil # Return nil to exclude this author from the result if there's an error
+              nil
             end.compact
           end
 
           if book_data[:genres]
             genres = book_data[:genres].uniq.map do |genre_name|
-              genre_name_capitalized = genre_name.capitalize
-              Genre.find_or_create_by!(name: genre_name_capitalized)
+              genre_name_capitalized = genre_name.downcase.titleize # Consistent capitalization
+              genre = Genre.where('LOWER(name) = ?', genre_name.downcase).first_or_initialize
+              genre.name = genre_name_capitalized if genre.new_record?
+              genre.save
+              genre
             rescue ActiveRecord::RecordInvalid => e
               Rails.logger.error "Genre validation failed: #{e.message}"
-              nil # Return nil to exclude this genre from the result if there's an error
+              nil
             end.compact
           end
 

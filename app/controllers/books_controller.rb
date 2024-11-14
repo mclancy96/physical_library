@@ -7,7 +7,12 @@ class BooksController < ApplicationController
   # GET /books or /books.json
   def index
     @books = if session[:search_query].present?
-               Book.where('LOWER(title) LIKE ?', "%#{session[:search_query].downcase}%").order(title: :asc)
+               search_term = "%#{session[:search_query].downcase}%"
+
+               @books = Book.joins(:authors, :genres)
+                            .where('LOWER(books.title) LIKE :search OR LOWER(authors.name) LIKE :search OR LOWER(genres.name) LIKE :search', search: search_term)
+                            .distinct
+                            .order(title: :asc)
              else
                Book.all.order(title: :asc)
              end.paginate(page: params[:page], per_page: 9)
@@ -113,7 +118,7 @@ class BooksController < ApplicationController
   # POST /books or /books.json
   def create
     if (book_params[:isbn10].nil? || book_params[:isbn10] == '') &&
-       (book_params[:isbn13].nil? || book_params[:isbn13] == '')
+      (book_params[:isbn13].nil? || book_params[:isbn13] == '')
       flash[:error] = 'Must include ISBN10 or ISBN13'
       redirect_to new_book_path
       return false

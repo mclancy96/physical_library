@@ -18,7 +18,7 @@
   </div>
   <div>
 
-    <hr>
+    <hr class="border border-secondary border-4">
 
     <h2 class="m5">Search by ISBN</h2>
     <div class="mb-3 text-start">
@@ -35,9 +35,10 @@
       <% end %>
     </div>
 
-    <hr>
+    <hr class="border border-secondary border-4">
 
     <h2 class="m5">Search by Open Library ID (Only if There's No ISBN)</h2>
+    <p><%= link_to 'Click here to go to Open Library' , 'https://openlibrary.org' %></p>
     <div class="mb-3 text-start">
       <%= form_with url: books_olid_path do |form| %>
 
@@ -51,9 +52,9 @@
 
       <% end %>
     </div>
-    <hr>
+    <hr class="border border-secondary border-4">
 
-    <h2 class="m5">Click the dropdown below to show the manual entry form</h2>
+    <h2 class="m5">Manually Enter Values</h2>
 
     <div class="accordion border-2 m-2">
       <div class="accordion-item">

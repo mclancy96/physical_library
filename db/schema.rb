@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_11_13_211018) do
+ActiveRecord::Schema[7.1].define(version: 2024_11_14_045151) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -90,14 +90,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_13_211018) do
   create_table "books", force: :cascade do |t|
     t.string "title", null: false
     t.integer "publication_year"
-    t.string "isbn10", null: false
-    t.string "isbn13", null: false
+    t.string "isbn10"
+    t.string "isbn13"
     t.integer "page_count"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "shelf_location"
-    t.index ["isbn10"], name: "index_books_on_isbn10"
-    t.index ["isbn13"], name: "index_books_on_isbn13", unique: true
+    t.index ["isbn10"], name: "index_books_on_isbn10", unique: true, where: "isbn10 IS NOT NULL"
+    t.index ["isbn13"], name: "index_books_on_isbn13", unique: true, where: "isbn13 IS NOT NULL"
   end
 
   create_table "borrowings", force: :cascade do |t|

@@ -2,7 +2,7 @@ class BooksController < ApplicationController
   require 'open-uri'
   before_action :authenticate
   before_action :set_book, only: %i[show edit update destroy]
-  protect_from_forgery with: :null_session, only: :scan
+  protect_from_forgery with: :null_session, only: :isbn
 
   # GET /books or /books.json
   def index
@@ -37,74 +37,28 @@ class BooksController < ApplicationController
     @genres = ''
   end
 
-  def scan
+  def isbn
     isbn = params[:isbn]
-    book_data = OpenLibraryService.fetch_book_details(isbn.to_s)
+    book_data = OpenLibraryService.fetch_book_details_by_isbn(isbn.to_s)
     puts "receive book data: #{book_data}"
-
-    if book_data&.is_a?(Hash) && book_data[:isbn13]
-      begin
-        ActiveRecord::Base.transaction do
-          # Create or find the authors and genres
-          if book_data[:authors]
-            authors = book_data[:authors].uniq.map do |author_name|
-              author_name_downcase = author_name.downcase
-              author = Author.where('LOWER(name) = ?', author_name_downcase).first_or_initialize
-              author.name = author_name.capitalize if author.new_record?
-              author.save
-              author
-            end
-          end
-
-          if book_data[:genres]
-            genres = book_data[:genres].uniq.map do |genre_name|
-              genre_name_downcase = genre_name.downcase
-              genre = Genre.where('LOWER(name) = ?', genre_name_downcase).first_or_initialize
-              genre.name = genre_name.capitalize if genre.new_record?
-              genre.save
-              genre
-            end
-          end
-
-          if Book.where(isbn13: book_data[:isbn13]).count.zero?
-            # Create the book record
-            book = Book.new(
-              title: book_data[:title],
-              publication_year: book_data[:publication_year].to_i,
-              isbn10: book_data[:isbn10],
-              isbn13: book_data[:isbn13],
-              page_count: book_data[:page_count].to_i
-            )
-
-            # Download and attach the cover image
-            if book_data[:cover_image_url].present?
-              begin
-                cover_image_file = URI.open(book_data[:cover_image_url])
-                book.cover_image.attach(io: cover_image_file, filename: "cover_#{isbn}.jpg")
-              rescue OpenURI::HTTPError => e
-                Rails.logger.error "Failed to open image URL: #{e.message}"
-              end
-            end
-
-            book.save!
-            book.genres << genres if genres
-            book.authors << authors if authors
-
-            flash[:success] = "Successfully added #{book_data[:title]}"
-            redirect_to book_path(book) and return
-          else
-            flash[:error] = 'Book already exists'
-            redirect_to new_book_path and return
-          end
-        end
-      rescue ActiveRecord::RecordInvalid, OpenURI::HTTPError => e
-        Rails.logger.error "Error occurred: #{e.message}"
-        Rails.logger.error(e.backtrace&.join("\n"))
-        flash[:error] = "An error occurred while adding the book: #{e.message}"
-        redirect_to new_book_path
-      end
+    create_book_from_ol_data(book_data)
+    if !@book.nil?
+      flash[:notice] = "Successfully added #{@book.title}"
+      redirect_to book_path(@book)
     else
-      flash[:error] = 'No book found'
+      redirect_to new_book_path
+    end
+  end
+
+  def olid
+    olid = params[:olid]
+    book_data = OpenLibraryService.fetch_book_details_by_olid(olid.to_s)
+    puts "receive book data: #{book_data}"
+    create_book_from_ol_data(book_data)
+    if !@book.nil?
+      flash[:notice] = "Successfully added #{@book.title}"
+      redirect_to book_path(@book)
+    else
       redirect_to new_book_path
     end
   end
@@ -238,7 +192,7 @@ class BooksController < ApplicationController
 
   def book_data_lookup
     @isbn = params[:isbn]
-    @book_data = OpenLibraryService.fetch_book_details(@isbn)
+    @book_data = OpenLibraryService.fetch_book_details_by_isbn(@isbn)
     if @book_data['errors']
       render json: { error: @book_data['errors'] }, status: :not_found
     else
@@ -270,5 +224,67 @@ class BooksController < ApplicationController
 
   def remove_attachments
     @book.cover_image.purge if @book.cover_image.attached?
+  end
+
+  def create_book_from_ol_data(book_data)
+    puts "in the create book form: #{book_data}"
+    if book_data&.is_a?(Hash)
+      book_count = book_data[:isbn13].nil? ? Book.where('LOWER(title) like ?', book_data[:title]&.downcase).count : Book.where(isbn13: book_data[:isbn13]).count
+      begin
+        ActiveRecord::Base.transaction do
+          # Create or find the authors and genres
+          if book_data[:authors]
+            authors = book_data[:authors].uniq.map do |author_name|
+              author_name_capitalized = author_name.capitalize
+              Author.find_or_create_by!(name: author_name_capitalized)
+            rescue ActiveRecord::RecordInvalid => e
+              Rails.logger.error "Author validation failed: #{e.message}"
+              nil # Return nil to exclude this author from the result if there's an error
+            end.compact
+          end
+
+          if book_data[:genres]
+            genres = book_data[:genres].uniq.map do |genre_name|
+              genre_name_capitalized = genre_name.capitalize
+              Genre.find_or_create_by!(name: genre_name_capitalized)
+            rescue ActiveRecord::RecordInvalid => e
+              Rails.logger.error "Genre validation failed: #{e.message}"
+              nil # Return nil to exclude this genre from the result if there's an error
+            end.compact
+          end
+
+          if book_count.zero?
+            # Create the book record
+            book = Book.new(
+              title: book_data[:title],
+              publication_year: book_data[:publication_year].to_i,
+              isbn10: book_data[:isbn10],
+              isbn13: book_data[:isbn13],
+              page_count: book_data[:page_count].to_i
+            )
+
+            # Download and attach the cover image
+            if book_data[:cover_image_url].present?
+              cover_image_file = URI.open(book_data[:cover_image_url])
+              book.cover_image.attach(io: cover_image_file, filename: "cover_#{book.isbn13.nil? ? olid : book.isbn13 }.jpg")
+            end
+
+            if book.save
+              book.genres << genres if genres
+              book.authors << authors if authors
+              @book = book
+            end
+          else
+            flash[:error] = 'Book already exists'
+          end
+        end
+      rescue ActiveRecord::RecordInvalid, OpenURI::HTTPError => e
+        Rails.logger.error "Error occurred: #{e.message}"
+        Rails.logger.error(e.backtrace&.join("\n"))
+        flash[:error] = "An error occurred while adding the book: #{e.message}"
+      end
+    else
+      flash[:error] = 'No book found'
+    end
   end
 end

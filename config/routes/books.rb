@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   resources :books
   resources :series
   resources :book_copies
-  post 'books/scan', to: 'books#scan'
+  post 'books/isbn', to: 'books#isbn'
+  post 'books/olid', to: 'books#olid'
   get 'books/isbn/:isbn', to: 'books#book_data_lookup'
 end

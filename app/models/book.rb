@@ -19,8 +19,8 @@ class Book < ApplicationRecord
   has_many :borrowings
   has_many :borrowers, through: :borrowings, source: :borrower
 
-  validates :isbn10, allow_blank: true, presence: true
-  validates :isbn13, uniqueness: true, allow_blank: false, presence: true
+  validates :isbn10, uniqueness: true, allow_nil: true
+  validates :isbn13, uniqueness: true, allow_nil: true
   validates :title, presence: true
   validates :publication_year, presence: true, numericality: { only_integer: true }
   validates :page_count, numericality: { only_integer: true }, presence: true

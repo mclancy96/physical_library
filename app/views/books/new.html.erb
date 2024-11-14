@@ -1,13 +1,13 @@
 <div class="container">
   <h1>Create a New Book</h1>
-  <p>There are three ways to add a book: look it up by scanning it, look it up by isbn, or type in the details
+  <p>There are four ways to add a book: look it up by scanning it, look it up by isbn, look it up by OLID, or type in the details
     manually</p>
 
   <h2 class="m5">Scan Book Barcode</h2>
   <div class="mb-3 text-center">
     <button id="scan-barcode-btn" class="btn btn-primary">Scan Book Barcode</button>
     <div id="reader" style="display: none; max-width:400px;"></div>
-    <%= form_with url: books_scan_path, id: 'book-scan' do |form| %>
+    <%= form_with url: books_isbn_path, id: 'book-scan' do |form| %>
       <div class="m-3 text-center">
         <p><strong>Status:</strong> <span id="book-info">Click the button above to begin scanning.</span></p>
         <div class="input-group mb-3">
@@ -22,13 +22,30 @@
 
     <h2 class="m5">Search by ISBN</h2>
     <div class="mb-3 text-start">
-      <%= form_with url: books_scan_path do |form| %>
+      <%= form_with url: books_isbn_path do |form| %>
 
         <div class="m-3">
           <%= form.label :isbn, "Enter the book's ISBN in the ISBN13 format (ISBN10 will work too)", class: 'form-label' %>
           <div class="input-group mb-3">
             <%= form.text_field :isbn, placeholder: '9781624144295', class: 'form-control', 'aria-describedby': 'submit-isbn' %>
             <%= form.submit class: 'btn btn-primary', type: 'submit', id: 'submit-isbn' %>
+          </div>
+        </div>
+
+      <% end %>
+    </div>
+
+    <hr>
+
+    <h2 class="m5">Search by Open Library ID (Only if There's No ISBN)</h2>
+    <div class="mb-3 text-start">
+      <%= form_with url: books_olid_path do |form| %>
+
+        <div class="m-3">
+          <%= form.label :olid, "Enter the book's Open Library ID", class: 'form-label' %>
+          <div class="input-group mb-3">
+            <%= form.text_field :olid, placeholder: 'OL5909829M', class: 'form-control', 'aria-describedby': 'submit-olid' %>
+            <%= form.submit class: 'btn btn-primary', type: 'submit', id: 'submit-olid' %>
           </div>
         </div>
 

@@ -14,10 +14,10 @@
       <h5 class="card-title text-center"><strong><%= link_to book.title.titleize, book_path(book) %></strong></h5>
       <div class="mx-5">
         <span class="card-text"><strong>Publication Year:</strong> <%= book.publication_year %></span><br>
-        <span class="card-text"><strong>Authors:</strong> <%= book.authors.pluck(:name).join(', ') %></span><br>
+        <span class="card-text"><strong>Authors:</strong> <%= book.authors.pluck(:name).map(&:titleize).join(', ') %></span><br>
         <span class="card-text"><strong>Genres:</strong>
           <%= book.genres.map { |genre|
-            @genres.sort_by(&:book_count).reverse.find { |g| g.id == genre.id }&.name
+            @genres.sort_by(&:book_count).reverse.find { |g| g.id == genre.id }&.name&.titleize
           }.compact.first(5).join(", ") %>
       </span><br>
         <span class="card-text"><strong>Page Count:</strong> <%= book.page_count %></span><br>

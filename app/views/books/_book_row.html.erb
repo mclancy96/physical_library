@@ -1,6 +1,6 @@
  <tr>
     <td><%= link_to book.title, book_path(book) %></td>
-   <td><%= book.authors.each.pluck(:name).join(", ") %></td>
+   <td><%= book.authors.each.pluck(:name).map(&:titleize).join(", ") %></td>
    <% if date1 %>
      <td><%= date1 %></td>
    <% end %>

@@ -31,9 +31,9 @@
       <% end %>
       <p><strong>Publication Year:</strong> <%= @book.publication_year %></p>
       <p><strong>Genres:</strong> <%= @book.genres.map { |genre|
-        @genres.sort_by(&:book_count).reverse.find { |g| g.id == genre.id }&.name
+        @genres.sort_by(&:book_count).reverse.find { |g| g.id == genre.id }&.name&.titleize
       }.compact.join(", ") %></p>
-      <p><strong>Authors:</strong> <%= @book.authors.pluck(:name).join(', ') %></p>
+      <p><strong>Authors:</strong> <%= @book.authors.pluck(:name).map(&:titleize).join(', ') %></p>
       <p><strong>Page Count:</strong> <%= @book.page_count %></p>
       <p><strong>ISBN-10:</strong> <%= @book.isbn10 %></p>
       <p><strong>ISBN-13:</strong> <%= @book.isbn13 %></p>

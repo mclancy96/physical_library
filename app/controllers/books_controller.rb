@@ -11,7 +11,7 @@ class BooksController < ApplicationController
                puts "Searching for: #{search_term}"
 
                @books = Book.left_joins(:authors)
-                            .where('LOWER(books.title) LIKE :search OR LOWER(authors.name) LIKE :search', search: search_term)
+                            .where('LOWER(books.title) LIKE :search OR LOWER(authors.name) LIKE :search OR LOWER(books.isbn13) LIKE :search', search: search_term)
                             .order(title: :asc)
              else
                Book.all.order(title: :asc)

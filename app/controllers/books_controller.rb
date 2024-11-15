@@ -10,8 +10,8 @@ class BooksController < ApplicationController
                search_term = "%#{session[:search_query].downcase}%"
                puts "Searching for: #{search_term}"
 
-               @books = Book.left_joins(:authors, :genres)
-                            .where('LOWER(books.title) LIKE :search OR LOWER(authors.name) LIKE :search OR LOWER(genres.name) LIKE :search', search: search_term)
+               @books = Book.left_joins(:authors)
+                            .where('LOWER(books.title) LIKE :search OR LOWER(authors.name) LIKE :search', search: search_term)
                             .order(title: :asc)
              else
                Book.all.order(title: :asc)

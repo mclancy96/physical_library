@@ -236,7 +236,7 @@ class BooksController < ApplicationController
           if book_data[:authors]
             authors = book_data[:authors].uniq.map do |author_name|
               author_name_capitalized = author_name.downcase.titleize # Consistent capitalization
-              author = Author.where('LOWER(name) = ?', author_name.downcase).first_or_initialize
+              author = Author.where('LOWER(name) = ?', author_name_capitalized.downcase).first_or_initialize
               author.name = author_name_capitalized if author.new_record?
               author.save
               author
@@ -249,7 +249,7 @@ class BooksController < ApplicationController
           if book_data[:genres]
             genres = book_data[:genres].uniq.map do |genre_name|
               genre_name_capitalized = genre_name.downcase.titleize # Consistent capitalization
-              genre = Genre.where('LOWER(name) = ?', genre_name.downcase).first_or_initialize
+              genre = Genre.where('LOWER(name) = ?', genre_name_capitalized.downcase).first_or_initialize
               genre.name = genre_name_capitalized if genre.new_record?
               genre.save
               genre

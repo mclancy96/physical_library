@@ -276,7 +276,13 @@ class BooksController < ApplicationController
             end
 
             if book.save
-              book.genres << genres if genres
+              Rails.logger.info "Here are the genres: #{book_data[:genres].join(', ')}"
+              genres&.each do |genre|
+                Rails.logger.info "Genre to be added: #{genre.name}"
+                book.genres << genre
+                Rails.logger.info "Genre added: #{genre.name}"
+              end
+              # book.genres << genres if genres
               book.authors << authors if authors
               @book = book
             end

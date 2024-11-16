@@ -240,7 +240,7 @@ class BooksController < ApplicationController
               author.name = author_name_capitalized if author.new_record?
               author.save
               author
-            rescue ActiveRecord::RecordInvalid => e
+            rescue StandardError => e
               Rails.logger.error "Author validation failed: #{e.message}"
               nil
             end.compact
@@ -253,7 +253,7 @@ class BooksController < ApplicationController
               genre.name = genre_name_capitalized if genre.new_record?
               genre.save
               genre
-            rescue ActiveRecord::RecordInvalid => e
+            rescue StandardError => e
               Rails.logger.error "Genre validation failed: #{e.message}"
               nil
             end.compact

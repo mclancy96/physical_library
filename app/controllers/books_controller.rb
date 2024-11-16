@@ -40,7 +40,7 @@ class BooksController < ApplicationController
   def isbn
     isbn = params[:isbn]
     book_data = OpenLibraryService.fetch_book_details_by_isbn(isbn.to_s)
-    puts "receive book data: #{book_data}"
+    puts "receive book data for #{isbn}: #{book_data}"
     create_book_from_ol_data(book_data)
     if !@book.nil?
       flash[:notice] = "Successfully added #{@book.title}"
@@ -53,7 +53,7 @@ class BooksController < ApplicationController
   def olid
     olid = params[:olid]
     book_data = OpenLibraryService.fetch_book_details_by_olid(olid.to_s)
-    puts "receive book data: #{book_data}"
+    puts "receive book data for #{olid}: #{book_data}"
     create_book_from_ol_data(book_data)
     if !@book.nil?
       flash[:notice] = "Successfully added #{@book.title}"
@@ -227,7 +227,6 @@ class BooksController < ApplicationController
   end
 
   def create_book_from_ol_data(book_data)
-    puts "in the create book form: #{book_data}"
     if book_data&.is_a?(Hash)
       book_count = book_data[:isbn13].nil? ? Book.where('LOWER(title) like ?', book_data[:title]&.downcase).count : Book.where(isbn13: book_data[:isbn13]).count
       begin
@@ -276,13 +275,7 @@ class BooksController < ApplicationController
             end
 
             if book.save
-              Rails.logger.info "Here are the genres: #{book_data[:genres].join(', ')}"
-              genres&.each do |genre|
-                Rails.logger.info "Genre to be added: #{genre.name}"
-                book.genres << genre
-                Rails.logger.info "Genre added: #{genre.name}"
-              end
-              # book.genres << genres if genres
+              book.genres << genres if genres
               book.authors << authors if authors
               @book = book
             end

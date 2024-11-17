@@ -6,7 +6,6 @@ class LibrarythingScraper
 
   def self.scrape(isbn)
     url = "#{BASE_URL}#{isbn}"
-    puts "URL: #{url}"
     response = HTTParty.get(url, headers: { 'User-Agent' => 'Mozilla/5.0' })
 
     if response.code == 200

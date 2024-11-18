@@ -3,16 +3,15 @@ require 'nokogiri'
 
 class LibrarythingScraper
   BASE_URL = 'https://www.librarything.com/mds/'.freeze
+
   class << self
 
     def sub_divisions
-      subdivisions = []
-      (0..1).each do |i|
+      (0..1000).each do |i|
         Rails.logger.info "Getting subdivision #{i}"
         ddc_int_string = convert_to_int_string(i)
-        recursive_lookup(add_decimal_place(ddc_int_string), subdivisions)
+        recursive_lookup(add_decimal_place(ddc_int_string))
       end
-      subdivisions
     end
 
     def get_text(ddc)
@@ -20,7 +19,6 @@ class LibrarythingScraper
       Rails.logger.info("ddc: #{ddc}")
       response = HTTParty.get(url)
       if response.code == 200
-        Rails.logger.info('success!')
         parse_data(response.body, ddc)
       else
         Rails.logger.error "Failed to fetch data for ISBN #{isbn}. HTTP Status: #{response.code}. "
@@ -30,26 +28,32 @@ class LibrarythingScraper
 
     private
 
-    def recursive_lookup(ddc_string, collection_array)
-      Rails.logger.info "Collection array currently: #{collection_array}"
+    def recursive_lookup(ddc_string)
       return if ddc_string.nil?
 
       subdivision_result = get_text(ddc_string)
       unless subdivision_result.nil? || subdivision_result == 'Not set'
-        unless collection_array.include?(ddc_string)
-          collection_array << {
-            level: count_numerical_characters(ddc_string),
-            code: ddc_string,
-            description: subdivision_result,
-          }
-        end
-        recursive_lookup(add_decimal_place(ddc_string), collection_array)
+        create_dewey_code(ddc_string, subdivision_result)
+        recursive_lookup(add_decimal_place(ddc_string))
       end
-      recursive_lookup(add_one_to_decimal_place(ddc_string), collection_array)
+      recursive_lookup(add_one_to_decimal_place(ddc_string))
     end
 
     def convert_to_int_string(num)
       "#{num.to_s.rjust(3, '0')}."
+    end
+
+    def create_dewey_code(code_string, result)
+      return if DeweyCode.exists?(code: code_string)
+
+      begin
+        DeweyCode.create(level: count_numerical_characters(code_string),
+                         code: code_string,
+                         description: result).save!
+        Rails.logger.info "Created new dewey code for #{code_string}."
+      rescue StandardError => e
+        Rails.logger.error("Failed to create DeweyCode for #{code_string}. Error: #{e.message}.")
+      end
     end
 
     def add_decimal_place(num_string)

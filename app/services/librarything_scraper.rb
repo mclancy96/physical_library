@@ -2,20 +2,34 @@ require 'httparty'
 require 'nokogiri'
 
 class LibrarythingScraper
-  BASE_URL = 'https://www.librarything.com/isbn/'.freeze
+  BASE_URL = 'https://www.librarything.com/mds/'.freeze
 
-  def self.scrape(isbn)
-    url = "#{BASE_URL}#{isbn}"
-    Rails.logger.info("url: #{url}")
-    response = HTTParty.get(url, headers: {
-      'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-      'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
-      'Accept-Encoding' => 'gzip, deflate, br',
-      'Accept-Language' => 'en-US,en;q=0.9',
-      'Connection' => 'keep-alive',
-      'Upgrade-Insecure-Requests' => '1',
-      'TE' => 'Trailers'
-    })
+
+  (0..1_000).each do |i|
+    
+  end
+
+  def convert_to_int_string(num)
+    "#{num.to_s.rjust(3, '0')}."
+  end
+
+  def add_decimal_place(num_string)
+    "#{num_string}0"
+  end
+
+  def add_one_to_decimal_place(num_string)
+    num_string[-1] == '9' ? nil : num_string[0...-1] + (num_string[-1].to_i + 1).to_s
+  end
+
+
+
+
+
+  def self.get_text(ddc)
+    url = "#{BASE_URL}#{ddc}"
+    sleep(2)
+    Rails.logger.info("ddc: #{ddc}")
+    response = HTTParty.get(url)
 
     if response.code == 200
       Rails.logger.info('success!')
@@ -28,9 +42,10 @@ class LibrarythingScraper
 
   def self.parse_data(html)
     doc = Nokogiri::HTML(html)
-    Rails.logger.info "Found #{doc}"
+    Rails.logger.info("parse_data: #{doc}")
     # Example: Extracting book Dewey Decimal Code
-    ddc = doc.search('//*[@class="fwikiItem divcanonicalddc"]/div/div/a')&.text&.strip
+    ddc = doc.search('td[fieldname="modernschedule"] div div a')&.text&.strip
     Rails.logger.info "Found #{ddc}"
+    ddc if ddc.present?
   end
 end

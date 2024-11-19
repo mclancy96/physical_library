@@ -6,8 +6,8 @@ class LibrarythingScraper
 
   class << self
 
-    def sub_divisions
-      (0..1000).each do |i|
+    def sub_divisions(range = (0..1000))
+      range.each do |i|
         Rails.logger.info "Getting subdivision #{i}"
         ddc_int_string = convert_to_int_string(i)
         recursive_lookup(add_decimal_place(ddc_int_string))

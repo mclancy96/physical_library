@@ -49,3 +49,5 @@ yarn-debug.log*
 
 .idea*
 /.idea*
+
+output_readable.txt

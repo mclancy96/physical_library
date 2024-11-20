@@ -10,6 +10,7 @@ class Member < ApplicationRecord
   belongs_to :role, optional: true
   has_many :borrowings
   has_many :borrowed_books, through: :borrowings, source: :book
+  has_many :read_statuses
 
   before_save { self.email = email.downcase }
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i

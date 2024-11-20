@@ -25,7 +25,8 @@
     <div class="col-md-8 p-2 text-start">
       <h1 class="display-4"><%= @book.title.titleize %></h1>
       <% if @book.borrowers.include?(current_user) and @read_status and @progress %>
-        <p class="text-success"><strong>Current Progress:</strong> <%= @progress %>% (<%= @read_status.last_page_read%>/<%= @book.page_count%>)
+        <p class="text-success"><strong>Current Progress:</strong> <%= @progress %>% (<%= @read_status.last_page_read %>
+          /<%= @book.page_count %>)
           <span><%= link_to "Update Progress", "#update-status", class: 'text-primary' %></span>
         </p>
       <% end %>
@@ -84,3 +85,29 @@
   <% end %>
 
 </div>
+<% if current_user.read_statuses&.exists? %>
+  <div class="container mt-5 border border-4 text-center">
+    <h2>Read History</h2>
+
+      <table class="table table-responsive">
+        <thead>
+        <tr>
+          <th>Book Title</th>
+          <th>Status</th>
+          <th>Started Reading</th>
+          <th>Finished Reading</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% current_user.read_statuses&.each do |status| %>
+        <tr>
+          <td><%=status.book.title %></td>
+          <td><%=status.status %></td>
+          <td><%=status.created_at.localtime.strftime("%B %d, %Y %I:%M %p") %></td>
+          <td><%= status.status == 'completed' ? status.updated_at.localtime.strftime("%B %d, %Y %I:%M %p") : "-" %></td>
+        </tr>
+        <% end %>
+        </tbody>
+      </table>
+  </div>
+<% end %>

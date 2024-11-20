@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class DeweyCode < ApplicationRecord
+  belongs_to :parent, class_name: 'DeweyCode'
+  has_many :children, class_name: 'DeweyCode'
+  has_many :books
   def parent
     return nil if level <= 1
 

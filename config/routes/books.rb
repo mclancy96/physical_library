@@ -7,6 +7,9 @@ Rails.application.routes.draw do
   resources :books
   resources :series
   resources :book_copies
+  resources :dewey_codes do
+    get :children, on: :collection
+  end
   post 'books/isbn', to: 'books#isbn'
   post 'books/olid', to: 'books#olid'
   get 'books/isbn/:isbn', to: 'books#book_data_lookup'

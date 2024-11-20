@@ -18,8 +18,9 @@ class Book < ApplicationRecord
   has_one :reservation
   has_many :borrowings
   has_many :borrowers, through: :borrowings, source: :borrower
+  belongs_to :dewey_code, optional: true
 
-  validates :isbn10, uniqueness: true, allow_nil: true
+  validates :isbn10, uniqueness: true
   validates :isbn13, uniqueness: true, allow_nil: true
   validates :title, presence: true
   validates :publication_year, presence: true, numericality: { only_integer: true }
@@ -51,5 +52,9 @@ class Book < ApplicationRecord
   
   def borrowers
     Borrowing.where(book_id: id).map { |n| Member.find(n.member_id) }
+  end
+
+  def dewey_code
+    DeweyCode.find_by(id: dewey_code_id)
   end
 end

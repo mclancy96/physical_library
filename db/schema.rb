@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_11_19_203706) do
+ActiveRecord::Schema[7.1].define(version: 2024_11_20_010858) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -96,7 +96,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_19_203706) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "shelf_location"
-    t.string "ddc"
+    t.bigint "dewey_code_id"
+    t.index ["dewey_code_id"], name: "index_books_on_dewey_code_id"
     t.index ["isbn10"], name: "index_books_on_isbn10", unique: true, where: "isbn10 IS NOT NULL"
     t.index ["isbn13"], name: "index_books_on_isbn13", unique: true, where: "isbn13 IS NOT NULL"
   end
@@ -246,6 +247,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_19_203706) do
   add_foreign_key "book_genres", "genres"
   add_foreign_key "book_series", "books", on_delete: :cascade
   add_foreign_key "book_series", "series"
+  add_foreign_key "books", "dewey_codes"
   add_foreign_key "borrowings", "books", on_delete: :cascade
   add_foreign_key "borrowings", "members"
   add_foreign_key "likes", "books", on_delete: :cascade

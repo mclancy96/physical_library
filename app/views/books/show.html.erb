@@ -99,7 +99,7 @@
         </tr>
         </thead>
         <tbody>
-        <% current_user.read_statuses&.each do |status| %>
+        <% current_user.read_statuses&.order(updated_at: :desc).each do |status| %>
         <tr>
           <td><%=status.book.title %></td>
           <td><%=status.status %></td>

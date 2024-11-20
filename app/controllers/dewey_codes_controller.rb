@@ -9,4 +9,8 @@ class DeweyCodesController < ApplicationController
       format.json { render json: @children }
     end
   end
+
+  def show
+    @dewey_code = DeweyCode.find(params[:id])
+  end
 end

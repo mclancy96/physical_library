@@ -64,36 +64,41 @@ class DeleteExtraneousCodes < ActiveRecord::Migration[7.1]
       DeweyCode.find_by(code:)&.delete
     end
 
-    DeweyCode.find_or_create_by!(code: '013', description: 'Of works by specific classes of authors', level: 3)
-    DeweyCode.find_or_create_by!(code: '018', description: 'Author Catalogs', level: 3)
-    DeweyCode.find_or_create_by!(code: '019', description: 'Dictionary Catalogs', level: 3)
-    DeweyCode.find_or_create_by!(code: '024', description: 'Miscellany', level: 3)
-    DeweyCode.find_or_create_by!(code: '029', description: 'Documentation', level: 3)
-    DeweyCode.find_or_create_by!(code: '517', description: 'Calculus', level: 3)
-    DeweyCode.find_or_create_by!(code: '259', description: 'Other ministries and church work', level: 3)
-    DeweyCode.find_or_create_by!(code: '819', description: 'American literature in English outside the USA (optional)', level: 3)
-    DeweyCode.find_or_create_by!(code: '574', description: 'Biology', level: 3)
-    DeweyCode.find_or_create_by!(code: '291', description: 'Comparative Religion; Mythology (No Longer Used)', level: 3)
-    DeweyCode.find_or_create_by!(code: '589', description: 'Fungi', level: 3)
-    DeweyCode.find_or_create_by!(code: '625', description: 'Road and Railroad', level: 3)
-    DeweyCode.find_or_create_by!(code: '439', description: 'Other Germanic languages', level: 3)
-    DeweyCode.find_or_create_by!(code: '921', description: 'Philosophers and psychologists', level: 3)
-    DeweyCode.find_or_create_by!(code: '922', description: 'Of Theology', level: 3)
-    DeweyCode.find_or_create_by!(code: '923', description: 'People in social sciences', level: 3)
-    DeweyCode.find_or_create_by!(code: '925', description: 'Of Science', level: 3)
-    DeweyCode.find_or_create_by!(code: '926', description: 'Of Technology', level: 3)
-    DeweyCode.find_or_create_by!(code: '927', description: 'Of Fine Arts', level: 3)
-    DeweyCode.find_or_create_by!(code: '928', description: 'People in literature, history, biography, genealogy', level: 3)
-    DeweyCode.find_or_create_by!(code: '459', description: 'Romanian, Rhaetian, Sardinian, Corsican', level: 3)
-    DeweyCode.find_or_create_by!(code: '656', description: 'Transportation; Railroading, etc.', level: 3)
-    DeweyCode.find_or_create_by!(code: '655', description: 'Printing; Publishing; Copyright', level: 3)
-    DeweyCode.find_or_create_by!(code: '654', description: 'Romanian, Rhaetian, Sardinian, Corsican', level: 3)
-    DeweyCode.find_or_create_by!(code: '469', description: 'Portuguese and Galician', level: 3)
-    DeweyCode.find_or_create_by!(code: '778', description: 'Special Applications', level: 3)
-    DeweyCode.find_or_create_by!(code: '479', description: 'Other Italic languages', level: 3)
-    DeweyCode.find_or_create_by!(code: '489', description: 'Other Hellenic languages', level: 3)
-    DeweyCode.find_or_create_by!(code: '789', description: 'Composers or Types of music', level: 3)
-    DeweyCode.find_or_create_by!(code: '376', description: 'Education of Women', level: 3)
-    DeweyCode.find_or_create_by!(code: '377', description: 'Religious, Ethical, and Secular', level: 3)
+    [
+      { code: '013', description: 'Of works by specific classes of authors', level: 3 },
+      { code: '018', description: 'Author Catalogs', level: 3 },
+      { code: '019', description: 'Dictionary Catalogs', level: 3 },
+      { code: '024', description: 'Miscellany', level: 3 },
+      { code: '029', description: 'Documentation', level: 3 },
+      { code: '517', description: 'Calculus', level: 3 },
+      { code: '259', description: 'Other ministries and church work', level: 3 },
+      { code: '819', description: 'American literature in English outside the USA (optional)', level: 3 },
+      { code: '574', description: 'Biology', level: 3 },
+      { code: '291', description: 'Comparative Religion; Mythology (No Longer Used)', level: 3 },
+      { code: '589', description: 'Fungi', level: 3 },
+      { code: '625', description: 'Road and Railroad', level: 3 },
+      { code: '439', description: 'Other Germanic languages', level: 3 },
+      { code: '921', description: 'Philosophers and psychologists', level: 3 },
+      { code: '922', description: 'Of Theology', level: 3 },
+      { code: '923', description: 'People in social sciences', level: 3 },
+      { code: '925', description: 'Of Science', level: 3 },
+      { code: '926', description: 'Of Technology', level: 3 },
+      { code: '927', description: 'Of Fine Arts', level: 3 },
+      { code: '928', description: 'People in literature, history, biography, genealogy', level: 3 },
+      { code: '459', description: 'Romanian, Rhaetian, Sardinian, Corsican', level: 3 },
+      { code: '656', description: 'Transportation; Railroading, etc.', level: 3 },
+      { code: '655', description: 'Printing; Publishing; Copyright', level: 3 },
+      { code: '654', description: 'Romanian, Rhaetian, Sardinian, Corsican', level: 3 },
+      { code: '469', description: 'Portuguese and Galician', level: 3 },
+      { code: '778', description: 'Special Applications', level: 3 },
+      { code: '479', description: 'Other Italic languages', level: 3 },
+      { code: '489', description: 'Other Hellenic languages', level: 3 },
+      { code: '789', description: 'Composers or Types of music', level: 3 },
+      { code: '376', description: 'Education of Women', level: 3 },
+      { code: '377', description: 'Religious, Ethical, and Secular', level: 3 }
+    ].each do |attrs|
+      record = DeweyCode.where(code: attrs[:code], description: attrs[:description], level: attrs[:level]).first_or_initialize
+      record.save! if record.new_record?
+    end
   end
 end

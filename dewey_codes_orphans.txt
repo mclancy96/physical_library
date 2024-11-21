@@ -1,0 +1,10 @@
+Code: 0, Parent Code: , ID: 1, Description: Information
+Code: 1, Parent Code: , ID: 2, Description: Philosophy & Psychology
+Code: 2, Parent Code: , ID: 3, Description: Religion
+Code: 3, Parent Code: , ID: 4, Description: Social Sciences
+Code: 4, Parent Code: , ID: 5, Description: Language
+Code: 5, Parent Code: , ID: 6, Description: Natural sciences and mathematics
+Code: 6, Parent Code: , ID: 7, Description: Technology
+Code: 7, Parent Code: , ID: 8, Description: The Arts
+Code: 8, Parent Code: , ID: 9, Description: Literature
+Code: 9, Parent Code: , ID: 10, Description: History & Geography

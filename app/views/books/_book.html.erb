@@ -13,7 +13,7 @@
     <div class="card-body text-start">
       <h5 class="card-title text-center"><strong><%= link_to book.title.titleize, book_path(book) %></strong></h5>
       <div class="mx-5">
-        <span class="card-text"><strong>Dewey:</strong> <%= "#{book.dewey_code&.code} - #{book.dewey_code&.description}" if book.dewey_code%></span><br>
+        <span class="card-text"><strong>Dewey:</strong> <%= link_to "#{book.dewey_code&.code} - #{book.dewey_code&.description}", dewey_code_path(book.dewey_code) if book.dewey_code%></span><br>
         <span class="card-text"><strong>Publication Year:</strong> <%= book.publication_year %></span><br>
         <span class="card-text"><strong>Authors:</strong> <%= book.authors.pluck(:name).map(&:titleize).join(', ') %></span><br>
         <span class="card-text"><strong>Genres:</strong>

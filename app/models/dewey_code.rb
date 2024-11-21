@@ -13,6 +13,6 @@ class DeweyCode < ApplicationRecord
   end
 
   def children
-    DeweyCode.where('code LIKE ?', "#{code}%").and(DeweyCode.where('level = ? + 1', "#{level}%"))
+    DeweyCode.where("code LIKE '#{code}%'").and(DeweyCode.where("level = #{level + 1}"))
   end
 end

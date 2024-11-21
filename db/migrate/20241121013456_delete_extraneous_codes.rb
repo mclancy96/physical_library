@@ -96,9 +96,12 @@ class DeleteExtraneousCodes < ActiveRecord::Migration[7.1]
       { code: '789', description: 'Composers or Types of music', level: 3 },
       { code: '376', description: 'Education of Women', level: 3 },
       { code: '377', description: 'Religious, Ethical, and Secular', level: 3 }
-    ].each do |attrs|
-      record = DeweyCode.where(code: attrs[:code], description: attrs[:description], level: attrs[:level]).first_or_initialize
-      record.save! if record.new_record?
+    ].each do |attributes|
+      DeweyCode.find_or_create_by!(attributes)
+    rescue ActiveRecord::RecordInvalid => e
+      Rails.logger.error "Failed to create DeweyCode: #{attributes}. Error: #{e.message}"
+    rescue StandardError => e
+      Rails.logger.error "Unexpected error for DeweyCode: #{attributes}. Error: #{e.message}"
     end
   end
 end

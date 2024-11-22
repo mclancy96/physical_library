@@ -85,7 +85,7 @@
   <% end %>
 
 </div>
-<% if current_user.read_statuses&.exists? %>
+<% if current_user.read_statuses&.where(book_id: @book.id)&.exists? %>
   <div class="container mt-5 border border-4 text-center">
     <h2>Read History</h2>
 
@@ -99,7 +99,7 @@
         </tr>
         </thead>
         <tbody>
-        <% current_user.read_statuses&.order(updated_at: :desc).each do |status| %>
+        <% current_user.read_statuses.where(book_id: @book.id)&.order(updated_at: :desc)&.each do |status| %>
         <tr>
           <td><%=status.book.title %></td>
           <td><%=status.status %></td>

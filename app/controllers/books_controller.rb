@@ -127,12 +127,6 @@ class BooksController < ApplicationController
 
   # PATCH/PUT /books/1 or /books/1.json
   def update
-    if (book_params[:isbn10].nil? || book_params[:isbn10] == '') &&
-      (book_params[:isbn13].nil? || book_params[:isbn13] == '')
-      flash[:error] = 'Must include ISBN10 or ISBN13'
-      redirect_to book_path(@book) and return
-    end
-
     if book_params[:author_id]
       authors = book_params[:author_id].split(', ').uniq.map do |author_name|
         author_name_downcase = author_name.downcase
@@ -158,6 +152,7 @@ class BooksController < ApplicationController
     @book.isbn10 = book_params[:isbn10] if book_params[:isbn10].present?
     @book.isbn13 = book_params[:isbn13] if book_params[:isbn13].present?
     @book.page_count = book_params[:page_count] if book_params[:page_count].present?
+    @book.dewey_code = book_params[:dewey_code_id] if book_params[:dewey_code_id].present?
     @book.cover_image.attach(book_params[:cover_image]) if book_params[:cover_image].present?
 
     if @book.save
@@ -219,7 +214,7 @@ class BooksController < ApplicationController
   # Only allow a list of trusted parameters through.
   def book_params
     params.require(:book).permit(:title, :author_id, :genre_id, :publication_year, :isbn10, :isbn13, :cover_image,
-                                 :page_count)
+                                 :page_count, :dewey_code_id)
   end
 
   def remove_attachments

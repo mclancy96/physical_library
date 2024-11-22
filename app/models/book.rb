@@ -20,7 +20,7 @@ class Book < ApplicationRecord
   has_many :borrowers, through: :borrowings, source: :borrower
   belongs_to :dewey_code, optional: true
 
-  validates :isbn10, uniqueness: true
+  validates :isbn10, uniqueness: true, allow_nil: true
   validates :isbn13, uniqueness: true, allow_nil: true
   validates :title, presence: true
   validates :publication_year, presence: true, numericality: { only_integer: true }

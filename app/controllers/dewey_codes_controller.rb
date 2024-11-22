@@ -2,9 +2,7 @@
 
 class DeweyCodesController < ApplicationController
   def children
-    parent_id = params[:parent_id]
-    @children = DeweyCode.where(parent_id: parent_id)
-
+    @children = DeweyCode.find_by(id: params['parent_id']).children
     respond_to do |format|
       format.json { render json: @children }
     end

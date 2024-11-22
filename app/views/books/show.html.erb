@@ -65,31 +65,31 @@
   </div>
 </div>
 
-<div class="container mt-5 border border-4">
+<div class="container mt-5 p-3 border border-4">
   <h2>Borrow and Return Status</h2>
   <%= render 'books/borrow_and_reserve', book: @book %>
 
   <% if @book.borrowed? %>
-    <p class="m-2">Currently borrowed by: <%= @book.borrowers.pluck(:name).join(', ') %></p>
+    <p class="m-2">Currently borrowed by: <%= @book.borrowers.include?(current_user) ? "you" : @book.borrowers.pluck(:name).join(', ') %></p>
     <% if @book.borrowers.include?(current_user) and @read_status %>
       <h3 id='update-status'>Update Reading Status?</h3>
       <p>Looks like you're currently reading this book. Would you like to update your reading status?</p>
       <div class="container">
-        <%= render 'read_statuses/form', read_status: @read_status %>
+        <%= render 'read_statuses/form', read_status: @read_status, book: @book %>
       </div>
     <% end %>
   <% end %>
 
   <% if @book.reserved? %>
-    <p class="m-2">Currently reserved by: <%= @book.reservation.member.name %></p>
+    <p class="m-2">Currently reserved by: <%= @book.reservation.member.id == current_user.id ? "you" : @book.reservation.member.name %></p>
   <% end %>
 
 </div>
 <% if current_user.read_statuses&.where(book_id: @book.id)&.exists? %>
-  <div class="container mt-5 border border-4 text-center">
+  <div class="container mt-5 border border-4 text-center p-3">
     <h2>Read History</h2>
 
-      <table class="table table-responsive">
+      <table class="table ">
         <thead>
         <tr>
           <th>Book Title</th>

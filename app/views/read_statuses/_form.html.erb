@@ -11,20 +11,25 @@
   <% end %>
 
   <div class="mb-3 col-lg-4 col-md-6 col-sm-12">
-    <%= form.label :status, "Read Status", class: "form-label" %>
+    <%= form.label :status, "Read Status", class: "form-label", for: 'status_selector' %>
     <div class="form-group">
-      <%= form.select :status, options_for_select([['Unread', :unread], ['Reading', :reading], ['Completed', :completed], ['Abandoned', :abandoned]], read_status.status), class: "form-select" %>
+      <select class="form-select" id="status_selector">
+        <option value="unread">Unread</option>
+        <option value="reading">Reading</option>
+        <option value="completed">Completed</option>
+        <option value="abandoned">Abandoned</option>
+      </select>
     </div>
   </div>
 
   <div class="mb-3 col-lg-4 col-md-6 col-sm-12">
     <%= form.label :finished_date, style: "display: block", class: "form-label" %>
-    <%= form.date_field :finished_date, class: 'form-control' %>
+    <%= form.date_field :finished_date, class: 'form-control date' %>
   </div>
 
   <div class="mb-3 col-lg-4 col-md-6 col-sm-12">
     <%= form.label :last_page_read, style: "display: block", class: "form-label" %>
-    <%= form.number_field :last_page_read, class: 'form-control' %>
+    <%= form.number_field :last_page_read, class: 'form-control', min: 0, max: book.page_count  %>
   </div>
 
   <div>

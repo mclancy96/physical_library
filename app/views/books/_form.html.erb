@@ -58,7 +58,7 @@
       <%= form.file_field :cover_image, accept: 'image/*', class: "form-control" %>
     </div>
 
-    <div class="form-group m-3">
+    <div class="form-group m-3 border border-2 border-info p-2">
       <%= form.label :dewey_code_id, "Select Dewey Code", class: "form-label", for: "dewey-level-1" %>
       <!-- First dropdown -->
       <select id="dewey-level-1" class="form-select mb-3">
@@ -72,7 +72,7 @@
       <div id="dewey-dropdowns"></div>
 
       <!-- Hidden field to store the selected Dewey Code ID -->
-      <%= form.hidden_field :dewey_code_id, id: "selected-dewey-code-id" %>
+      <%= form.hidden_field :dewey_code_id, id: "dewey_code_id", class: "form-control" %>
     </div>
 
 

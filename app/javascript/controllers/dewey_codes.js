@@ -1,10 +1,12 @@
 document.addEventListener("DOMContentLoaded", () => {
     const baseURL = "/dewey_codes/children";
     const dropdownContainer = document.getElementById("dewey-dropdowns");
-    const selectedDeweyCodeField = document.getElementById("selected-dewey-code-id");
+    const selectedDeweyCodeField = document.getElementById("dewey_code_id");
+    const hiddenField = document.getElementById("dewey_code_id");
 
     document.getElementById("dewey-level-1").addEventListener("change", (event) => {
         const selectedValue = event.target.value;
+        hiddenField.value = this.value;
         if (selectedValue) {
             fetchChildDeweyCodes(selectedValue, 2);
         } else {

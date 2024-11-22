@@ -146,13 +146,14 @@ class BooksController < ApplicationController
         genre
       end
     end
-
+    Rails.logger.info "Book params: #{book_params}"
+    Rails.logger.info "Dewey Code: #{book_params[:dewey_code_id]}"
     @book.title = book_params[:title] if book_params[:title].present?
     @book.publication_year = book_params[:publication_year] if book_params[:publication_year].present?
     @book.isbn10 = book_params[:isbn10] if book_params[:isbn10].present?
     @book.isbn13 = book_params[:isbn13] if book_params[:isbn13].present?
     @book.page_count = book_params[:page_count] if book_params[:page_count].present?
-    @book.dewey_code = book_params[:dewey_code_id] if book_params[:dewey_code_id].present?
+    @book.dewey_code_id = book_params[:dewey_code_id] if book_params[:dewey_code_id].present?
     @book.cover_image.attach(book_params[:cover_image]) if book_params[:cover_image].present?
 
     if @book.save

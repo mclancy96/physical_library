@@ -1,11 +1,6 @@
 class Member < ApplicationRecord
-  has_many :wishlists
-  has_many :ratings
-  has_many :wishlists
   has_many :likes, dependent: :destroy
   has_many :liked_books, through: :likes, source: :book
-  has_many :ratings
-  has_many :rated_books, through: :ratings, source: :book
   has_many :reservations
   belongs_to :role, optional: true
   has_many :borrowings

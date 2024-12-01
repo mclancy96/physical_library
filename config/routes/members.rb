@@ -6,5 +6,4 @@ Rails.application.routes.draw do
   post 'login', to: 'sessions#create'
   get 'logout', to: 'sessions#destroy', as: 'logout'
   resources :members, except: %i[new]
-  resources :notifications, only: %i[create update]
 end

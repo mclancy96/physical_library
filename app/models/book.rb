@@ -6,14 +6,8 @@ class Book < ApplicationRecord
   has_many :authors, through: :author_books, source: :author
   has_many :book_genres, dependent: :destroy
   has_many :genres, through: :book_genres
-  has_many :wishlist_books, dependent: :destroy
-  has_many :wishlists, through: :wishlist_books
   has_many :likes, dependent: :destroy
   has_many :liked_by_members, through: :likes, source: :member
-  has_many :ratings, dependent: :destroy
-  has_many :rated_by_members, through: :ratings, source: :member
-  has_many :book_series, dependent: :destroy
-  has_many :series, through: :book_series
   has_one_attached :cover_image, dependent: :destroy
   has_one :reservation
   has_many :borrowings
@@ -26,8 +20,6 @@ class Book < ApplicationRecord
   validates :publication_year, presence: true, numericality: { only_integer: true }
   validates :page_count, numericality: { only_integer: true }, presence: true
 
-
-
   def cover_image_url
     return unless cover_image.attached?
 
@@ -38,10 +30,6 @@ class Book < ApplicationRecord
     Like.where(book_id: id, member_id: current_member.id).exists?
   end
 
-  def average_rating
-    Rating.where(book_id: id).average(:rating)
-  end
-
   def reserved?
     Reservation.where(book_id: id).exists?
   end
@@ -49,7 +37,7 @@ class Book < ApplicationRecord
   def borrowed?
     Borrowing.where(book_id: id).exists?
   end
-  
+
   def borrowers
     Borrowing.where(book_id: id).map { |n| Member.find(n.member_id) }
   end

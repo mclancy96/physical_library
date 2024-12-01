@@ -15,7 +15,7 @@ class BooksController < ApplicationController
                             .order(title: :asc)
              else
                Book.all.order(title: :asc)
-             end.paginate(page: params[:page], per_page: 9)
+             end.paginate(page: params[:page], per_page: 12)
     @book_count = @books.count
     @genres = Genre.rank_genres
   end

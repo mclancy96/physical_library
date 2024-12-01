@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_11_21_013456) do
+ActiveRecord::Schema[7.1].define(version: 2024_12_01_010331) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -57,17 +57,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_21_013456) do
     t.index ["name"], name: "index_authors_on_name", unique: true
   end
 
-  create_table "book_copies", force: :cascade do |t|
-    t.integer "book_id", null: false
-    t.string "barcode"
-    t.string "condition"
-    t.date "acquisition_date"
-    t.string "shelf_location"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["book_id"], name: "index_book_copies_on_book_id"
-  end
-
   create_table "book_genres", force: :cascade do |t|
     t.integer "book_id", null: false
     t.integer "genre_id", null: false
@@ -75,16 +64,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_21_013456) do
     t.datetime "updated_at", null: false
     t.index ["book_id"], name: "index_book_genres_on_book_id"
     t.index ["genre_id"], name: "index_book_genres_on_genre_id"
-  end
-
-  create_table "book_series", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "book_id", null: false
-    t.integer "series_id", null: false
-    t.index ["book_id", "series_id"], name: "index_book_series_on_book_id_and_series_id", unique: true
-    t.index ["book_id"], name: "index_book_series_on_book_id"
-    t.index ["series_id"], name: "index_book_series_on_series_id"
   end
 
   create_table "books", force: :cascade do |t|
@@ -152,26 +131,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_21_013456) do
     t.index ["role_id"], name: "index_members_on_role_id"
   end
 
-  create_table "notifications", force: :cascade do |t|
-    t.integer "member_id", null: false
-    t.string "notification_type"
-    t.text "message"
-    t.boolean "read"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["member_id"], name: "index_notifications_on_member_id"
-  end
-
-  create_table "ratings", force: :cascade do |t|
-    t.integer "book_id", null: false
-    t.integer "member_id", null: false
-    t.integer "rating", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["book_id"], name: "index_ratings_on_book_id"
-    t.index ["member_id"], name: "index_ratings_on_member_id"
-  end
-
   create_table "read_statuses", force: :cascade do |t|
     t.integer "member_id", null: false
     t.integer "book_id", null: false
@@ -196,16 +155,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_21_013456) do
     t.index ["member_id"], name: "index_reservations_on_member_id"
   end
 
-  create_table "reviews", force: :cascade do |t|
-    t.integer "book_id", null: false
-    t.integer "member_id", null: false
-    t.text "review_text", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["book_id"], name: "index_reviews_on_book_id"
-    t.index ["member_id"], name: "index_reviews_on_member_id"
-  end
-
   create_table "roles", force: :cascade do |t|
     t.string "name", null: false
     t.string "code", null: false
@@ -213,56 +162,19 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_21_013456) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "series", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.text "title", null: false
-    t.text "description"
-  end
-
-  create_table "wishlist_books", id: false, force: :cascade do |t|
-    t.integer "wishlist_id", null: false
-    t.integer "book_id", null: false
-    t.index ["wishlist_id", "book_id"], name: "index_wishlist_books_on_wishlist_id_and_book_id", unique: true
-  end
-
-  create_table "wishlists", force: :cascade do |t|
-    t.integer "member_id", null: false
-    t.integer "book_id", null: false
-    t.string "title", null: false
-    t.string "request_status", default: "0"
-    t.date "added_date", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["book_id"], name: "index_wishlists_on_book_id"
-    t.index ["member_id"], name: "index_wishlists_on_member_id"
-  end
-
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "author_books", "authors"
   add_foreign_key "author_books", "books", on_delete: :cascade
-  add_foreign_key "book_copies", "books"
   add_foreign_key "book_genres", "books", on_delete: :cascade
   add_foreign_key "book_genres", "genres"
-  add_foreign_key "book_series", "books", on_delete: :cascade
-  add_foreign_key "book_series", "series"
   add_foreign_key "books", "dewey_codes"
   add_foreign_key "borrowings", "books", on_delete: :cascade
   add_foreign_key "borrowings", "members"
   add_foreign_key "likes", "books", on_delete: :cascade
   add_foreign_key "likes", "members"
-  add_foreign_key "notifications", "members"
-  add_foreign_key "ratings", "books", on_delete: :cascade
-  add_foreign_key "ratings", "members"
   add_foreign_key "read_statuses", "books", on_delete: :cascade
   add_foreign_key "read_statuses", "members"
   add_foreign_key "reservations", "books", on_delete: :cascade
   add_foreign_key "reservations", "members"
-  add_foreign_key "reviews", "books", on_delete: :cascade
-  add_foreign_key "reviews", "members"
-  add_foreign_key "wishlist_books", "books", on_delete: :cascade
-  add_foreign_key "wishlist_books", "wishlists", on_delete: :cascade
-  add_foreign_key "wishlists", "books"
-  add_foreign_key "wishlists", "members"
 end

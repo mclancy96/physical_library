@@ -103,7 +103,8 @@ class BooksController < ApplicationController
       publication_year: book_params[:publication_year].to_i,
       isbn10: book_params[:isbn10].nil? || book_params[:isbn10] == '' ? ISBN.ten(book_params[:isbn13].to_s) : book_params[:isbn10],
       isbn13: book_params[:isbn13].nil? || book_params[:isbn13] == '' ? ISBN.thirteen(book_params[:isbn10].to_s) : book_params[:isbn13],
-      page_count: book_params[:page_count].to_i
+      page_count: book_params[:page_count].to_i,
+      created_by_id: current_user.id
     )
 
     book.cover_image.attach(book_params[:cover_image]) if book_params && book_params[:cover_image].present?
@@ -261,7 +262,8 @@ class BooksController < ApplicationController
               publication_year: book_data[:publication_year].to_i,
               isbn10: book_data[:isbn10],
               isbn13: book_data[:isbn13],
-              page_count: book_data[:page_count].to_i
+              page_count: book_data[:page_count].to_i,
+              created_by_id: current_user.id
             )
 
             # Download and attach the cover image

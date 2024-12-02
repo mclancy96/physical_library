@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_12_01_010331) do
+ActiveRecord::Schema[7.1].define(version: 2024_12_02_152249) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -76,6 +76,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_01_010331) do
     t.datetime "updated_at", null: false
     t.string "shelf_location"
     t.bigint "dewey_code_id"
+    t.integer "created_by_id"
     t.index ["dewey_code_id"], name: "index_books_on_dewey_code_id"
     t.index ["isbn10"], name: "index_books_on_isbn10", unique: true, where: "isbn10 IS NOT NULL"
     t.index ["isbn13"], name: "index_books_on_isbn13", unique: true, where: "isbn13 IS NOT NULL"

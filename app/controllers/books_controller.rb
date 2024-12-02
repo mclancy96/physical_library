@@ -178,10 +178,13 @@ class BooksController < ApplicationController
 
   # DELETE /books/1 or /books/1.json
   def destroy
-    return unless @book.creator == current_user.id || current_user.role == 'admin'
+    if @book.creator != current_user.id && current_user.role != 'admin'
+      flash[:error] = 'You are not authorized to delete this book'
+      redirect_to book_path(@book)
+    end
+
     remove_attachments
     @book.destroy!
-
     respond_to do |format|
       format.html { redirect_to books_path, status: :see_other, notice: 'Book was successfully destroyed.' }
       format.json { head :no_content }

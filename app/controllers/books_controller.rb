@@ -178,6 +178,7 @@ class BooksController < ApplicationController
 
   # DELETE /books/1 or /books/1.json
   def destroy
+    return unless @book.creator == current_user.id || current_user.role == 'admin'
     remove_attachments
     @book.destroy!
 

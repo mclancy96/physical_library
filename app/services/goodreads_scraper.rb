@@ -24,7 +24,7 @@ class GoodreadsScraper
       rating = doc.xpath('//*[@class="RatingStatistics__rating"]')
       rating_count = doc.xpath('//*[@class="RatingStatistics__meta"]')
       Rails.logger.info "Found #{rating}"
-      [rating&.first&.text, rating_count&.first&.text&.split(" ")&.first&.strip]
+      [rating&.first&.text&.to_f, rating_count&.first&.text&.split(' ')&.first&.strip&.delete(',')&.to_i]
     end
   end
 end

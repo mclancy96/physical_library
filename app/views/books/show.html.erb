@@ -30,6 +30,7 @@
           <span><%= link_to "Update Progress", "#update-status", class: 'text-primary' %></span>
         </p>
       <% end %>
+      <p><strong>Rating:</strong> <%= "#{@book.rating.rating}/5 - #{number_with_delimiter(@book.rating.rating_count, delimiter: ",")} ratings" if @book.rating %></p>
       <p><strong>Dewey:</strong> <%= link_to "#{@book.dewey_code&.code} - #{@book.dewey_code&.description}", dewey_code_path(@book.dewey_code) if @book.dewey_code %></p>
       <p><strong>Publication Year:</strong> <%= @book.publication_year %></p>
       <p><strong>Genres:</strong> <%= @book.genres.map { |genre|

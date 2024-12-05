@@ -10,11 +10,11 @@ class BooksController < ApplicationController
                search_term = "%#{session[:search_query].downcase}%"
                puts "Searching for: #{search_term}"
 
-               @books = Book.left_joins(:authors)
-                            .where('LOWER(books.title) LIKE :search OR LOWER(authors.name) LIKE :search OR LOWER(books.isbn13) LIKE :search', search: search_term)
-                            .order(title: :asc)
+               @books = sort_books(Book.left_joins(:authors)
+                            .left_joins(:ratings)
+                            .where('LOWER(books.title) LIKE :search OR LOWER(authors.name) LIKE :search OR LOWER(books.isbn13) LIKE :search', search: search_term))
              else
-               Book.all.order(title: :asc)
+               sort_books(Book.all)
              end.paginate(page: params[:page], per_page: 12)
     @book_count = @books.count
     @genres = Genre.rank_genres
@@ -225,6 +225,24 @@ class BooksController < ApplicationController
 
   def remove_attachments
     @book.cover_image.purge if @book.cover_image.attached?
+  end
+
+  def sort_books(book_query)
+    Rails.logger.info "direction: #{params[:direction]}"
+    Rails.logger.info "sort: #{params[:sort]}"
+    if params[:sort] == 'rating'
+      book_query.order(Arel.sql("ratings.rating #{params[:direction]}"))
+    else
+      book_query.order("#{sort_column} #{sort_direction}")
+    end
+  end
+
+  def sort_column
+    Book.column_names.include?(params[:sort]) ? params[:sort] : 'title'
+  end
+
+  def sort_direction
+    %w[asc desc].include?(params[:direction]&.to_s) ? params[:direction] : 'asc'
   end
 
   def create_book_from_ol_data(book_data)

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_12_02_154154) do
+ActiveRecord::Schema[7.1].define(version: 2024_12_05_004947) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -132,6 +132,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_02_154154) do
     t.index ["role_id"], name: "index_members_on_role_id"
   end
 
+  create_table "ratings", force: :cascade do |t|
+    t.integer "rating"
+    t.integer "rating_count", default: 0
+    t.integer "book_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["book_id"], name: "index_ratings_on_book_id"
+  end
+
   create_table "read_statuses", force: :cascade do |t|
     t.integer "member_id", null: false
     t.integer "book_id", null: false
@@ -174,6 +183,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_02_154154) do
   add_foreign_key "borrowings", "members"
   add_foreign_key "likes", "books", on_delete: :cascade
   add_foreign_key "likes", "members"
+  add_foreign_key "ratings", "books"
   add_foreign_key "read_statuses", "books", on_delete: :cascade
   add_foreign_key "read_statuses", "members"
   add_foreign_key "reservations", "books", on_delete: :cascade

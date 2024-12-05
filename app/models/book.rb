@@ -14,6 +14,7 @@ class Book < ApplicationRecord
   has_many :borrowers, through: :borrowings, source: :borrower
   belongs_to :dewey_code, optional: true
   belongs_to :creator, class_name: 'Member', foreign_key: 'created_by_id', optional: true
+  has_one :rating
 
   validates :isbn10, uniqueness: true, allow_nil: true
   validates :isbn13, uniqueness: true, allow_nil: true

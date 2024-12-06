@@ -11,7 +11,6 @@ class BooksController < ApplicationController
                puts "Searching for: #{search_term}"
 
                @books = sort_books(Book.left_joins(:authors)
-                            .left_joins(:ratings)
                             .where('LOWER(books.title) LIKE :search OR LOWER(authors.name) LIKE :search OR LOWER(books.isbn13) LIKE :search', search: search_term))
              else
                sort_books(Book.all)
@@ -231,7 +230,7 @@ class BooksController < ApplicationController
     Rails.logger.info "direction: #{params[:direction]}"
     Rails.logger.info "sort: #{params[:sort]}"
     if params[:sort] == 'rating'
-      book_query.order(Arel.sql("ratings.rating #{params[:direction]}"))
+      book_query.left_joins(:rating).order(Arel.sql("ratings.rating #{params[:direction]}"))
     else
       book_query.order("#{sort_column} #{sort_direction}")
     end
